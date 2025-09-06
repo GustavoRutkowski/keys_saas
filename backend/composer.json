@@ -1,0 +1,30 @@
+{
+  "name": "pwii/keys_saas",
+  "description": "Seu gerenciador de senhas seguro e confiável.",
+  "minimum-stability": "stable",
+  "authors": [
+    {
+      "name": "Gustavo Rutkowski",
+      "email": "rutkowskigustavo@gmail.com",
+      "role": "Front-End Developer"
+    },
+    {
+      "name": "Felipi Machado",
+      "role": "Back-End Developer"
+    }
+  ],
+  "config": {
+    "vendor-dir": "vendor"
+  },
+  "autoload": {
+    "psr-4": {
+      "Source\\": "Source/"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "coffeecode/router" : "2.0.2",
+    "firebase/php-jwt": "v6.11.1",
+    "bramus/router": "^1.6"
+  }
+}
