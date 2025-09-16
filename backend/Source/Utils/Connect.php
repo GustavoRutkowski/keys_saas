@@ -1,15 +1,21 @@
 <?php
 
 namespace Source\Utils;
+require __DIR__ . '/../../vendor/autoload.php';
 
+use Dotenv\Dotenv;
 use PDO;
 use PDOException;
 use InvalidArgumentException;
 
-const CONF_DB_HOST = "mysql"; // localhost
-const CONF_DB_NAME = "keys_php";
-const CONF_DB_USER = "root";
-const CONF_DB_PASS = "password"; // nada
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+$dotenv->load();
+
+
+define('CONF_DB_HOST', $_ENV['MYSQL_HOST']); // Ou localhost
+define('CONF_DB_NAME', $_ENV['MYSQL_DATABASE']);
+define('CONF_DB_USER', $_ENV['MYSQL_USER']);
+define('CONF_DB_PASS', $_ENV['MYSQL_PASSWORD']);
 
 abstract class Connect
 {
@@ -47,7 +53,7 @@ abstract class Connect
     {
         $queryType = strtoupper(strtok(trim($query), ' '));
         $allowedTypes = ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
- 
+
         if (!in_array($queryType, $allowedTypes)) {
             throw new InvalidArgumentException(
                 "Tipo de query não suportado: $queryType"

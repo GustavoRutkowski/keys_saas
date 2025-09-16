@@ -16,7 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 use Bramus\Router\Router;
 
-const API_HOST = 'https://localhost:3469';
+// const API_HOST = "https://localhost:{$apiPort}/backend";
+
+
+/* ------------------------------ ROUTES ------------------------------ */
 
 $router = new Router();
 $namespace = "Source\\Controllers\\";
@@ -84,40 +87,6 @@ $router->mount('/cards', function() use ($router, $callController) {
     $router->delete('/credit/{id}', fn($id) => $callController('CardsController:deleteCreditCard', ['id'=> $id]));
 
 });
-// $router->mount("/cards");
-//     $router->post("/", "CardsController:createCard");
-
-//     $router->get("/all", "CardsController:getAllCards");
-
-//     $router->get("/debit/{id}", "CardsController:getDebitCardById");
-//     $router->get("/credit/{id}", "CardsController:getCreditCardById");
-
-//     $router->delete("/debit/{id}", "CardsController:deleteDebitCard");
-//     $router->delete("/credit/{id}", "CardsController:deleteCreditCard");
-// $router->mount("null");
-// $router->dispatch();
-
-    // $router->mount("/softwares");
-    //     $router->get("/all", "SoftwaresController:getAllSoftwares");
-    //     $router->get("/id/{id}", "SoftwaresController:getSoftwareById");
-    //     $router->get("/pass-id/{passID}", "SoftwaresController:getSoftwareByPasswordId");
-    
-    //     $router->post("/", "SoftwaresController:createSoftware");
-    //     $router->put("/id/{id}", "SoftwaresController:updateSoftware");
-    //     $router->delete("/id/{id}", "SoftwaresController:deleteSoftware");
-    // $router->mount("null");
-// $router->mount("/passwords");
-//     $router->post("/create", "PasswordsController:createPassword");
-    
-//     $router->get("/all", "PasswordsController:getAllPasswords"); 
-//     $router->get("/id/{id}", "PasswordsController:getPasswordById");
-
-//     $router->put("/update/{id}", "PasswordsController:updatePassword"); 
-
-//     $router->delete("/delete/{id}", "PasswordsController:deletePassword");
-// $router->mount("null");
-    
-
 
 // Qualquer erro levará para esse caminho:
 

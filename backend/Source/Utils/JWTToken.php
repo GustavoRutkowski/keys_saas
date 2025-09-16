@@ -2,16 +2,22 @@
 
 namespace Source\Utils;
 
+require __DIR__ . '/vendor/autoload.php';
+
+use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use \DateTimeImmutable;
 use \Exception;
 
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../../../');
+$dotenv->load();
+
 class JWTToken
 {
-    private const SECRET_KEY = 'secret-key_#03#19';
+    private static string $secretKey = $_ENV['JWT_SECRET'];
+    private static string $url = "http://localhost:{$_ENV('JWT_SECRET')}";
     private const ALGORITHM = 'HS512';
-    private const URL = 'http://localhost:8080';
     private string $value;
     private array $payload;
     private string $expires;
@@ -28,20 +34,20 @@ class JWTToken
         $data = [
             'iat'  => $issuedAt->getTimestamp(),
             'jti'  => $tokenId,
-            'iss'  => JWTToken::URL,
+            'iss'  => JWTToken::$url,
             'nbf'  => $issuedAt->getTimestamp(),
             'exp'  => $expire,
             'data' => $payload
         ];
 
-        $this->value = JWT::encode($data, JWTToken::SECRET_KEY, JWTToken::ALGORITHM);
+        $this->value = JWT::encode($data, JWTToken::$secretKey, JWTToken::ALGORITHM);
     }
 
     // JWTToken::from($token) -> O from gera um objeto do tipo token a partir da string, ja que o verify usa o objeto, n a string
     public static function from(string $token): ?JWTToken
     {
         try {
-            $decoded = JWT::decode($token, new Key(self::SECRET_KEY, self::ALGORITHM));
+            $decoded = JWT::decode($token, new Key(self::$secretKey, self::ALGORITHM));
 
             $instance = new self([]);
 
@@ -68,11 +74,11 @@ class JWTToken
     public static function verify(JWTToken $token): array
     {
         try {
-            $decoded = JWT::decode($token->getToken(), new Key(JWTToken::SECRET_KEY, JWTToken::ALGORITHM));
+            $decoded = JWT::decode($token->getToken(), new Key(JWTToken::$secretKey, JWTToken::ALGORITHM));
             $now = new DateTimeImmutable();
 
             if (
-                $decoded->iss !== JWTToken::URL ||
+                $decoded->iss !== JWTToken::$url ||
                 $decoded->nbf > $now->getTimestamp() ||
                 $decoded->exp < $now->getTimestamp()
             ) {
