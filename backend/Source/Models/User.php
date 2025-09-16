@@ -5,10 +5,10 @@ namespace Source\Models;
 use Source\Utils\Connect;
 use Source\Utils\JWTToken;
 use Source\Utils\ModelException;
+use Source\Models\Model;
 
-class User
-{
-    public static string $TABLE = 'users';
+class User extends Model {
+    protected static string $TABLE = 'users';
 
     private $id;
     private $name;
@@ -51,15 +51,7 @@ class User
     }
 
     public static function getByToken(string $token) {
-        $jwt = JWTToken::from($token);
-        if ($jwt === null)
-            throw new ModelException('invalid or malformed token');
-
-        $res = JWTToken::verify($jwt);
-        if (!$res['valid'])
-            throw new ModelException($res['message'], 401);
-        
-        $id = $res['decoded_token']->id;
+        $id = self::authenticate($token);
         return User::getById($id);
     }
 
@@ -77,21 +69,7 @@ class User
     }
 
     public static function update(string $token, ?string $name, ?string $main_pass, ?string $picture) {
-        if (!$token)
-            throw new ModelException('token is required');
-
-        $jwt = JWTToken::from($token);
-        if ($jwt === null)
-            throw new ModelException('expired or invalid token!', 401);
-
-        $res = JWTToken::verify($jwt);
-        if (!$res['valid'])
-            throw new ModelException('expired or invalid token!', 401);
-        
-        if (!$name && !$main_pass && !$picture)
-            throw new ModelException('to update, you must pass at least one argument');
-        
-        $id = $res['decoded_token']->id;
+        $id = self::authenticate($token);
 
         $query = 'UPDATE users SET';
         $data = [];

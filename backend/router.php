@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 use Bramus\Router\Router;
 use Source\Controllers\UsersController;
+use Source\Controllers\PasswordsController;
 
 // const API_HOST = "https://localhost:{$apiPort}/backend";
 
@@ -39,8 +40,7 @@ $callController = function(string $controllerMethod, array $params = []) use ($n
     return $instance->$method($params);
 };
 
-/* USERS */
-
+// Users
 $router->mount('/users', function() use ($router) {
     $router->post('/', fn() => UsersController::createUser());
 
@@ -52,17 +52,19 @@ $router->mount('/users', function() use ($router) {
     $router->post('/login', fn() => UsersController::login());
 });
 
-$router->mount('/passwords', function() use ($router, $callController) {
-    $router->post('/create', fn() => $callController('PasswordsController:createPassword'));
+// Passwords
+$router->mount('/passwords', function() use ($router) {
+    $router->post('/create', fn() => PasswordsController::createPassword());
     
-    $router->get('/all', fn() => $callController('PasswordsController:getAllPasswords'));
-    $router->get('/id/{id}', fn($id) => $callController('PasswordsController:getPasswordById', ['id'=> $id]));
+    $router->get('/all', fn() => PasswordsController::getAllPasswords());
+    $router->get('/id/{id}', fn($id) => PasswordsController::getPasswordById($id));
     
-    $router->put('/update/{id}', fn($id) => $callController('PasswordsController:updatePassword', ['id'=> $id]));
+    $router->put('/update/{id}', fn($id) => PasswordsController::updatePassword($id));
 
-    $router->delete('/delete/{id}', fn($id) => $callController('PasswordsController:deletePassword', ['id'=> $id]));
+    $router->delete('/delete/{id}', fn($id) => PasswordsController::deletePassword($id));
 });
 
+// Softwares
 $router->mount('/softwares', function() use ($router, $callController) {
     $router->post('/', fn() => $callController('SoftwaresController:createSoftware'));
 
@@ -76,6 +78,7 @@ $router->mount('/softwares', function() use ($router, $callController) {
 
 });
 
+// Cards
 $router->mount('/cards', function() use ($router, $callController) {
     $router->post('/', fn() => $callController('CardsController:createCard'));
 
