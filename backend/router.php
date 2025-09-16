@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 use Bramus\Router\Router;
+use Source\Controllers\UsersController;
 
 // const API_HOST = "https://localhost:{$apiPort}/backend";
 
@@ -40,15 +41,15 @@ $callController = function(string $controllerMethod, array $params = []) use ($n
 
 /* USERS */
 
-$router->mount('/users', function() use ($router, $callController) {
-    $router->post('/', fn() => $callController('UsersController:createUser'));
+$router->mount('/users', function() use ($router) {
+    $router->post('/', fn() => UsersController::createUser());
 
-    $router->get('/id/{id}', fn($id) => $callController('UsersController:getUserByID', ['id' => $id]));
-    $router->get('/user', fn() => $callController('UsersController:getUser'));
+    $router->get('/id/{id}', fn($id) => UsersController::getUserByID($id));
+    $router->get('/user', fn() => UsersController::getUser());
 
-    $router->put('/user', fn() => $callController('UsersController:updateUser'));
+    $router->put('/user', fn() => UsersController::updateUser());
 
-    $router->post('/login', fn() => $callController('UsersController:login'));
+    $router->post('/login', fn() => UsersController::login());
 });
 
 $router->mount('/passwords', function() use ($router, $callController) {

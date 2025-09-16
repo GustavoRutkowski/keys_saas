@@ -1,85 +1,69 @@
 <?php
 
-// PUT /users/user
-
 namespace Source\Controllers;
-
 use Source\Models\User;
+use Source\Utils\ModelException;
 
 class UsersController extends Controller {
-    // POST
-    public function createUser(array $data) {
-        $body = $this->getRequestData($data)['body'];
+    public static function createUser() {
+        $body = self::getRequestData()['body'];
 
-        $createdUser = User::create(
+        $insertId = User::create(
             $body['name'],
             $body['email'],
             $body['main_pass']
         );
 
-        $this::send(201, [
-            'status' => '201',
-            'message' => 'user created successfully!',
-            'success' => true,
-            'data' => $createdUser
-        ]);
+        $res = [ 'insertId' => $insertId ];
+        self::send(201, 'user created successfully!', data: $res);
     }
 
-    // GET
-    public function getUserByID(array $data) {
-        //var_dump($data);
-
-        $id = $this->getRequestData($data)['params']['id'];
-
-        $user = User::getById($id);
-
-        if (array_key_exists('message', $user)) return $this::send(404, $user);
-        $this::send(200, $user);
-    }
-    public function getUser(array $data) {
-        $token = $this->getRequestData($data)['headers']['token'];
-
-        $user = User::getByToken($token);
-
-        if (array_key_exists('message', $user)) return $this::send(404, $user);
-        $this::send(200, $user);
+    public static function getUserByID(int $id) {
+        try {
+            $user = User::getById($id);
+            self::send(200, 'user found successfully', data: $user);
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
     }
 
-    // PUT
-    public function updateUser(array $data) {
-        $token = $this->getRequestData($data)['headers']['token'];
-        $body = $this->getRequestData($data)['body'];
-
-        $userUpdated = User::update(
-            $token,
-            $body['name'],
-            $body['main_pass'],
-            $body['picture']
-        );
-
-        if ($userUpdated['success']) $this::send(204, [
-        'status' => '204',
-        'message' => 'user not updated!',
-        'success' => false,
-        ]);
+    public static function getUser() {
+        $token = self::getRequestData()['headers']['token'];
         
-        //$this::send(400, $userUpdated);
-        $this::send(400, [
-        'status' => '400',
-        'message' => 'user not updated!',
-        'success' => false,
-        'data' => $userUpdated
-        ]);
+        try {
+            $user = User::getByToken($token);
+            self::send(200, 'user found successfully', data: $user);
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
     }
 
-    // POST LOGIN
-    public function login(array $data = []) {
-        $body = $this->getRequestData($data)['body'];
+    public static function updateUser() {
+        $token = self::getRequestData()['headers']['token'];
+        $body = self::getRequestData()['body'];
 
-        $loginResult = User::login($body['email'], $body['main_pass']);
+        try {
+            User::update(
+                $token,
+                $body['name'],
+                $body['main_pass'],
+                $body['picture']
+            );
 
-        return $loginResult['success']
-            ? $this::send(200, $loginResult)
-            : $this::send(401, $loginResult);
+            self::send(204, 'user updated successfully');
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
+    }
+
+    public static function login() {
+        $body = self::getRequestData()['body'];
+
+        try {
+            $token = User::login($body['email'], $body['main_pass']);
+            self::send(200, 'user logged in successfully', data: [ 'token' => $token ]);
+        } catch (ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
     }
 }

@@ -3,13 +3,10 @@
 namespace Source\Controllers;
 
 abstract class Controller {
-    // $this->getRequestData($data)["body"]["email"]
-    // $this->getRequestData($data)["param"]
-    // $this->getRequestData($data)["headers"]
+    // $this->getRequestData()["body"]["email"] -> Retorna o email contido no body da requisição
+    // $this->getRequestData()["headers"] -> Retorna os headers da requisição
 
-    protected static function getRequestData(array $data = []): array {
-        $params = $data ?? [];
-
+    protected static function getRequestData(): array {
         $headers = function_exists('getallheaders')
             ? getallheaders()
             : Controller::getClientHeadersFallback();
@@ -19,30 +16,39 @@ abstract class Controller {
             true
         );
 
-        if (!is_array($body)) {
-            $body = [];
-        }
+        if (!is_array($body)) $body = [];
 
-        return [
-            'params'  => $params,
-            'headers' => $headers,
-            'body'    => $body,
-        ];
+        return [ 'headers' => $headers, 'body' => $body ];
     }
 
-    // $this::send(404, [
-        // "message" => "dados invalidos"
-    // ])
+    // self::send(404, 'user not found', false) -> Deixa explicito que deu errado
+    // self::send(404, 'user not found') -> Deixa implícito o erro (ele adivinha a partir do status)
+    // self::send(200, 'user found successfully', true, $data) -> Envia um objeto $data junto
+    // self::send(200, 'user found successfully', data: $data) -> Envia o objeto $data com success implicito (named param)
 
-    protected static function send(?int $status = null, ?array $data = []) {
-        if ($status !== null) {
-            http_response_code($status);
+    protected static function send(int $status, string $message, ?bool $success = null, ?array $data = []) {
+        http_response_code($status);
+
+        $itsSuccess = $success ?? null;
+
+        if ($itsSuccess === null) {
+            // Status maiores que 400 (400, 401, 403, 404, 500) tendem a ser erros
+            // Status menores que 400 (200, 201, 204, 300) tendem a ser successo (ou redirect)
+            $itsSuccess = $status >= 400;
         }
 
         header('Content-Type: application/json; charset=UTF-8');
 
+        $response = [
+            'status' => $status,
+            'success' => $success,
+            'message' => $message
+        ];
+
+        if ($data !== null) $response['data'] = $data;
+
         echo json_encode(
-            $data ?? [],
+            $response,
             JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
 
