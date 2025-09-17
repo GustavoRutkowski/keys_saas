@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 use Bramus\Router\Router;
 use Source\Controllers\UsersController;
 use Source\Controllers\PasswordsController;
-
+use Source\Controllers\SoftwaresController;
 // const API_HOST = "https://localhost:{$apiPort}/backend";
 
 
@@ -65,16 +65,16 @@ $router->mount('/passwords', function() use ($router) {
 });
 
 // Softwares
-$router->mount('/softwares', function() use ($router, $callController) {
-    $router->post('/', fn() => $callController('SoftwaresController:createSoftware'));
+$router->mount('/softwares', function() use ($router) {
+    $router->post('/', fn() => SoftwaresController::createSoftware());
 
-    $router->get('/all', fn() => $callController('SoftwaresController:getAllSoftwares'));
-    $router->get('/id/{id}', fn($id) => $callController('SoftwaresController:getSoftwareById', ['id'=> $id]));
-    $router->get('/pass-id/{passID}', fn($passID) => $callController('SoftwaresController:getSoftwareByPasswordId', ['id'=> $passID]));
+    $router->get('/all', fn() => SoftwaresController::getAllSoftwares());
+    $router->get('/id/{id}', fn($id) => SoftwaresController::getSoftwareById($id));
+    $router->get('/pass-id/{passID}', fn($passID) => SoftwaresController::getSoftwareByPasswordId($passID));
 
-    $router->put('/id/{id}', fn($id) => $callController('SoftwaresController:updateSoftware', ['id'=> $id]));
+    $router->put('/id/{id}', fn($id) => SoftwaresController::updateSoftware($id));
 
-    $router->delete('/id/{id}', fn($id) => $callController('SoftwaresController:deleteSoftware', ['id'=> $id]));
+    $router->delete('/id/{id}', fn($id) => SoftwaresController::deleteSoftware($id));
 
 });
 

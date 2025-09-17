@@ -3,7 +3,6 @@
 namespace Source\Models;
 
 use Source\Utils\Connect;
-use Source\Utils\JWTToken;
 use Exception;
 use Source\Models\Model;
 use Source\Utils\ModelException;
