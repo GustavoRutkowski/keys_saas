@@ -29,12 +29,10 @@ abstract class Controller {
     protected static function send(int $status, string $message, ?bool $success = null, ?array $data = []) {
         http_response_code($status);
 
-        $itsSuccess = $success ?? null;
-
-        if ($itsSuccess === null) {
+        if ($success === null) {
             // Status maiores que 400 (400, 401, 403, 404, 500) tendem a ser erros
             // Status menores que 400 (200, 201, 204, 300) tendem a ser successo (ou redirect)
-            $itsSuccess = $status >= 400;
+            $success = $status < 400;
         }
 
         header('Content-Type: application/json; charset=UTF-8');

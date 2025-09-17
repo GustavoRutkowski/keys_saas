@@ -5,7 +5,7 @@ use Source\Utils\JWTToken;
 use Source\Utils\ModelException;
 
 abstract class Model {
-    protected static string $TABLE = null;
+    protected static ?string $TABLE = null;
 
     protected static function authenticate($token) {
         if (!$token) throw new ModelException('token is required');

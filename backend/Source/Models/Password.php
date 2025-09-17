@@ -9,7 +9,7 @@ use Source\Utils\ModelException;
 
 class Password extends Model
 {
-    protected static string $TABLE = 'passwords';
+    protected static ?string $TABLE = 'passwords';
 
     private $id;
     private $value;

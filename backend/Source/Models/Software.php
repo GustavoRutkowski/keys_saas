@@ -6,7 +6,7 @@ use Source\Utils\ModelException;
 
 
 class Software extends Model {
-    protected static string $TABLE = 'softwares';
+    protected static ?string $TABLE = 'softwares';
 
     private $id;
     private $name;

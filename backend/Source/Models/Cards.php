@@ -7,6 +7,8 @@ use Source\Utils\JWTToken;
 use Source\Utils\ModelException;
 
 class Cards extends Model {
+    protected static ?string $TABLE = 'cards';
+
     public static function createCard(string $token, array $data) {
         $type = $data['type'] ?? 'debit'; // valor default: 'debit'
 

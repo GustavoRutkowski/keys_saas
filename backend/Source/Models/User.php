@@ -8,7 +8,7 @@ use Source\Utils\ModelException;
 use Source\Models\Model;
 
 class User extends Model {
-    protected static string $TABLE = 'users';
+    protected static ?string $TABLE = 'users';
 
     private $id;
     private $name;
