@@ -18,27 +18,13 @@ use Bramus\Router\Router;
 use Source\Controllers\UsersController;
 use Source\Controllers\PasswordsController;
 use Source\Controllers\SoftwaresController;
+use Source\Controllers\CardsController;
 // const API_HOST = "https://localhost:{$apiPort}/backend";
 
 
 /* ------------------------------ ROUTES ------------------------------ */
 
 $router = new Router();
-$namespace = "Source\\Controllers\\";
-
-$callController = function(string $controllerMethod, array $params = []) use ($namespace) {
-    [$controller, $method] = explode(':', $controllerMethod);
-
-    $class = $namespace . $controller;
-
-    if (!class_exists($class)) {
-        throw new \Exception("Classe $class não encontrada!");
-    }
-
-    $instance = new $class();
-
-    return $instance->$method($params);
-};
 
 // Users
 $router->mount('/users', function() use ($router) {
@@ -79,16 +65,16 @@ $router->mount('/softwares', function() use ($router) {
 });
 
 // Cards
-$router->mount('/cards', function() use ($router, $callController) {
-    $router->post('/', fn() => $callController('CardsController:createCard'));
+$router->mount('/cards', function() use ($router) {
+    $router->post('/', fn() => CardsController::createCard());
 
-    $router->get('/all', fn() => $callController('CardsController:getAllCards'));
+    $router->get('/all', fn() => CardsController::getAllCards());
 
-    $router->get('/debit/{id}', fn($id) => $callController('CardsController:getDebitCardById', ['id'=> $id]));
-    $router->get('/credit/{id}', fn($id) => $callController('CardsController:getCreditCardById', ['id'=> $id]));
+    $router->get('/debit/{id}', fn($id) => CardsController::getDebitCardById($id));
+    $router->get('/credit/{id}', fn($id) => CardsController::getCreditCardById($id));
 
-    $router->delete('/debit/{id}', fn($id) => $callController('CardsController:deleteDebitCard', ['id'=> $id]));
-    $router->delete('/credit/{id}', fn($id) => $callController('CardsController:deleteCreditCard', ['id'=> $id]));
+    $router->delete('/debit/{id}', fn($id) => CardsController::deleteDebitCard($id));
+    $router->delete('/credit/{id}', fn($id) => CardsController::deleteCreditCard($id));
 
 });
 
