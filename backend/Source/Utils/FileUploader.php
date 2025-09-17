@@ -1,6 +1,6 @@
 <?php
 
-class UploaderJson
+class FileUploader
 {
     private int $minSize;
     private int $maxSize;
