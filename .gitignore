@@ -8,3 +8,4 @@ composer.lock
 frontend/public/js
 frontend/public/css
 **/usr
+**/upload

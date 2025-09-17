@@ -43,10 +43,9 @@ class UsersController extends Controller {
         $body = self::getRequestData()['body'];
 
         try {
-            User::update(
+            User::updateInfos(
                 $token,
                 $body['name'],
-                $body['main_pass'],
                 $body['picture']
             );
 

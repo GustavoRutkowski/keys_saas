@@ -4,8 +4,10 @@ namespace Source\Models;
 
 use Source\Utils\Connect;
 use Source\Utils\JWTToken;
+use Exception;
 use Source\Utils\ModelException;
 use Source\Models\Model;
+use Source\Utils\FileUploader;
 
 class User extends Model {
     protected static ?string $TABLE = 'users';
@@ -68,31 +70,50 @@ class User extends Model {
         return $user;
     }
 
-    public static function update(string $token, ?string $name, ?string $main_pass, ?string $picture) {
+    public static function updateInfos(string $token, ?string $name, ?array $picture) {
         $id = self::authenticate($token);
 
-        $query = 'UPDATE users SET';
-        $data = [];
+        $updateQuery = 'UPDATE users SET ';
+        $updateParams = [];
 
-        if ($name) {
-            $query .= ' name = ?,';
-            $data[] = $name;
+        if ($name) $updateParams['name'] = $name;
+
+        // Se passar a foto de maneira inválida:
+        if ($picture && (!isset($picture['filename']) || !isset($picture['data'])))
+            throw new ModelException("picture attribute must contain 'filename' and 'data'");
+
+        if ($picture) {
+            define('KB', 1024);
+            define('GB', 1024 * KB);
+
+            $uploader = new FileUploader(
+                2 * KB,
+                5 * GB,
+                ['jpg', 'jpeg', 'png', 'gif'],
+                'img_', # Prefixo dos arquivos salvos
+                '../../../frontend/public/imgs/upload' # Pasta para salvar
+            );
+
+            $user = User::getById($id);
+            
+            // Remove a foto antiga, caso exista
+            if ($user['picture'] !== null) $uploader->removeFile($user['picture']);
+
+            try {
+                $filename = $uploader->uploadFile($picture);
+                $updateParams['picture'] = $filename;
+            } catch(Exception $e) {
+                var_dump($e->getMessage());
+                throw new ModelException('failed to upload image: ' . $e->getMessage(), 500, previous: $e);
+            }
         }
 
-        if ($picture && $picture !== '') {
-            $query .= ' picture = ?,';
-            $data[] = $picture;
-        }
+        $updateQuery .= join(',', array_map(fn($e) => (string)$e . ' = ?', array_keys($updateParams)));
+        $params = array_values($updateParams);
 
-        if ($main_pass) {
-            $query .= ' main_pass = ?';
-            $data[] = password_hash($main_pass, PASSWORD_DEFAULT);;
-        }
+        var_dump($updateQuery);
 
-        $query .= ' WHERE id = ?';
-        $data[] = $id;
-
-        $result = Connect::execute($query, $data);
+        $result = Connect::execute($updateQuery, $params);
         if ($result['action'] !== 'UPDATE')
             throw new ModelException('failed to update user', 500);
         
