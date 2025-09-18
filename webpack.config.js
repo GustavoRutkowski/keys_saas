@@ -6,8 +6,8 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const tsRoot = './src/frontend/dev/ts';
-const outputRoot = './src/frontend/public';
+const tsRoot = './frontend/dev/ts';
+const outputRoot = './frontend/public';
 
 const tsConfig = {
     entry: {

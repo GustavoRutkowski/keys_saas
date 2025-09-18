@@ -2,7 +2,7 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import dotenv from 'dotenv';
-dotenv.config({ path: 'src/.env' });
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,6 +35,6 @@ app.get('/admin-panel', (req, res) => {
     res.sendFile(path.join(__dirname, 'view', 'admin-panel.html'));
 });
 
-const PORT = process.env.SERVER_PORT || 5500;
+const PORT = process.env.SITE_PORT || 5500;
 
-app.listen(PORT, () => console.warn(`Server running in port ${PORT}...`));
+app.listen(PORT, '0.0.0.0', () => console.warn(`Server running in port ${PORT}...`));

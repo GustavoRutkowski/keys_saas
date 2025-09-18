@@ -5,8 +5,8 @@
   "main": "src/backend/server.js",
   "type": "module",
   "scripts": {
-    "start": "npm-run-all --parallel ts-compile sass-compile api-server web-server",
-    "start-dev": "npm-run-all --parallel ts-compile-dev sass-compile-dev api-server-dev web-server-dev",
+    "start": "npm-run-all --parallel ts-compile sass-compile web-server",
+    "start-dev": "npm-run-all --parallel ts-compile-dev sass-compile-dev web-server-dev",
     
     "web-server": "node frontend/server.js",
     "web-server-dev": "nodemon frontend/server.js",

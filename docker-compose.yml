@@ -49,6 +49,7 @@ services:
       (if [ \"$$START_MODE\" = \"DEV\" ]; then npm run start-dev; else npm run start; fi)"
     ports:
       - "3000:3000"
+      - "${SITE_PORT}:${SITE_PORT}"
     depends_on:
       - mysql
     networks:
