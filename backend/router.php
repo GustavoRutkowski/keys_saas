@@ -34,6 +34,7 @@ $router->mount('/users', function() use ($router) {
     $router->get('/user', fn() => UsersController::getUser());
 
     $router->put('/user', fn() => UsersController::updateUser());
+    $router->put('/user/main_pass', fn() => UsersController::updateUserMainPass());
 
     $router->post('/login', fn() => UsersController::login());
 });

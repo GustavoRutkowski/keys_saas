@@ -45,11 +45,29 @@ class UsersController extends Controller {
         try {
             User::updateInfos(
                 $token,
-                $body['name'],
-                $body['picture']
+                $body['name'] ?? null,
+                $body['picture'] ?? null
             );
 
             self::send(204, 'user updated successfully');
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
+    }
+
+    public static function updateUserMainPass() {
+        $token = self::getRequestData()['headers']['token'];
+        $body = self::getRequestData()['body'];
+
+        try {
+            User::changePassword(
+                $token, 
+                $body['main_pass'],
+                $body['new_main_pass'],
+                $body['repeat_new_main_pass']
+            );
+
+            self::send(204, 'main_pass changed successfully');
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
         }

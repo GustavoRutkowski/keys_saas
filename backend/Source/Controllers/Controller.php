@@ -43,7 +43,7 @@ abstract class Controller {
             'message' => $message
         ];
 
-        if ($data !== null) $response['data'] = $data;
+        if ($data !== null && !empty($data)) $response['data'] = $data;
 
         echo json_encode(
             $response,

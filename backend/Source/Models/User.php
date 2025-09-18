@@ -87,8 +87,7 @@ class User extends Model {
             define('GB', 1024 * KB);
 
             $uploader = new FileUploader(
-                2 * KB,
-                5 * GB,
+                2 * KB, 5 * GB,
                 ['jpg', 'jpeg', 'png', 'gif'],
                 'img_', # Prefixo dos arquivos salvos
                 '../../../frontend/public/imgs/upload' # Pasta para salvar
@@ -103,19 +102,45 @@ class User extends Model {
                 $filename = $uploader->uploadFile($picture);
                 $updateParams['picture'] = $filename;
             } catch(Exception $e) {
-                var_dump($e->getMessage());
-                throw new ModelException('failed to upload image: ' . $e->getMessage(), 500, previous: $e);
+                throw new ModelException('failed to upload image', 500, previous: $e);
             }
         }
 
-        $updateQuery .= join(',', array_map(fn($e) => (string)$e . ' = ?', array_keys($updateParams)));
+        $updateQuery .= join(',', array_map(fn($e) => (string)$e . ' = ?', array_keys($updateParams))) . ' WHERE id = ?';
         $params = array_values($updateParams);
 
-        var_dump($updateQuery);
-
-        $result = Connect::execute($updateQuery, $params);
+        $result = Connect::execute($updateQuery, [...$params, $id]);
         if ($result['action'] !== 'UPDATE')
             throw new ModelException('failed to update user', 500);
+        
+        return true;
+    }
+
+    public static function changePassword(
+        string $token,
+        string $main_pass,
+        string $new_main_pass,
+        string $repeat_new_main_pass
+    ) {
+        $id = self::authenticate($token);
+        
+        $results = Connect::execute('SELECT main_pass FROM users WHERE id = ?', [$id])['data'];
+        $user = $results[0];
+
+        $passwordIsValid = password_verify($main_pass, $user['main_pass']);
+        if (!$passwordIsValid)
+            throw new ModelException('invalid main_pass!', 403);
+
+        if ($new_main_pass !== $repeat_new_main_pass)
+            throw new ModelException('passwords do not match');
+
+        if (strlen($new_main_pass) < 8)
+            throw new ModelException('password must be 8 or more characters long');
+
+        $encoded_pass = password_hash($new_main_pass, PASSWORD_DEFAULT);
+        $result = Connect::execute('UPDATE users SET main_pass = ? WHERE id = ?', [$encoded_pass, $id]);
+        if ($result['action'] !== 'UPDATE')
+            throw new ModelException('failed to change user main_pass', 500);
         
         return true;
     }
@@ -125,17 +150,15 @@ class User extends Model {
             throw new ModelException('email and main_pass are required!');
 
         $query = 'SELECT * FROM users WHERE email = ?';
-        
         $results = Connect::execute($query, [$email])['data'];
+        
         $userNotFound = count($results) === 0;
-
         if ($userNotFound)
             throw new ModelException('invalid attempt');
         
         $user = $results[0];
 
         $passwordIsValid = password_verify($main_pass, $user['main_pass']);
-
         if (!$passwordIsValid)
             throw new ModelException('invalid attempt', 403);
 
@@ -150,6 +173,5 @@ class User extends Model {
     public function getEmail(): ?string { return $this->email; }
     public function getPicture(): ?string { return $this->picture; }
     public function setName(?string $name): void { $this->name = $name; }
-    public function changePassword(?string $password): void { $this->password = $password; }
     public function changePicture(?string $picture): void { $this->picture = $picture; }
 }
