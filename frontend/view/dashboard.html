@@ -32,8 +32,24 @@
         <!-- Adicionar o botão de logout ao lado do ícone e nome -->
         <!-- ÍCONE, NOME, BOTÃO LOGOUT -->
         
-        <!-- Inserido Dinamicamente: -->
-        <!-- <loader-menu> -->
+        <aside class="lateral-bar">
+            <!-- Inserido Dinamicamente: -->
+            <!-- <loader-menu> -->
+            
+            <section class="lateral-bar__user-section">
+                <div class="user-section__user-infos" title="configurações de perfil">
+                    <div class="user-infos__user_picture">
+                        <img src="../public/imgs/static/default-picture.png" alt="foto de perfil">
+                    </div>
+    
+                    <span class="user-infos__nickname">Gustavo Rutkowski Lara</span>
+                </div>
+
+                <button id="user-section__logout-btn" title="sair">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </section>
+        </aside>
 
         <!-- Conteúdo Inserido Dinamicamente: -->
         <section id="panel-selected"></section>

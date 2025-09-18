@@ -31,7 +31,7 @@ loaderMenu.setup({
     ]
 });
 
-const main = document.querySelector('main') as HTMLElement;
-const panelSelected = document.querySelector('section#panel-selected');
+const aside = document.querySelector('aside.lateral-bar') as HTMLElement;
+const userSection = document.querySelector('section.lateral-bar__user-section') as HTMLElement;
 
-main.insertBefore(loaderMenu, panelSelected);
+aside.insertBefore(loaderMenu, userSection)

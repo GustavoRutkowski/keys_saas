@@ -15,12 +15,8 @@ const stylesRaw = `
     ul { list-style: none; }
 
     :host {
-        padding: 2rem 0 !important;
         width: 100%;
-        max-width: calc(100dvw / 6);
-        font-size: 1.8rem;
-        background-color: #343746;
-        overflow: hidden;
+        height: fit-content;
     }
 
     ul.nav__links-list {
