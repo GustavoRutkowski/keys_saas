@@ -38,10 +38,10 @@ services:
     image: node:latest
     working_dir: /usr/src/app
     volumes:
-      # monta só a pasta do frontend
-      - ./frontend:/usr/src/app
-      # node_modules como volume anônimo
-      - /usr/src/app/node_modules
+      # monta na raiz
+      - ./:/usr/src/app
+      # node_modules como volume anônimo (dentro da frontend)
+      - /usr/src/app/frontend/node_modules
     environment:
       - START_MODE=${START_MODE}
     command: >
