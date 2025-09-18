@@ -1,7 +1,9 @@
 import './components/toggle-view-btn';
+import User from './models/User';
+import IUser from './interfaces/IUser';
 
-// Utils
 
+console.warn('Test 2...');
 // register.js
 const registerForm = document.querySelector('form#register-form') as HTMLFormElement;
 const messageParagraph = registerForm.querySelector('p.form-message') as HTMLParagraphElement;
@@ -11,17 +13,13 @@ registerForm.addEventListener('submit', async e => {
 
     const form = new FormData(registerForm);
 
-    const data = await fetch('http://localhost/backend/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            name: form.get('name'),
-            email: form.get('email'),
-            main_pass: form.get('main_pass')
-        })
-    });
+    const userInfos: IUser = {
+        name: form.get('name') as string,
+        email: form.get('email') as string,
+        main_pass: form.get('main_pass') as string
+    };
 
-    const userCreated = await data.json();
+    const userCreated = await User.create(userInfos);
 
     if (userCreated.success) {
         location.href = '/login';
