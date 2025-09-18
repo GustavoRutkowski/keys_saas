@@ -1,6 +1,9 @@
 import './components/toggle-view-btn';
+import { IUserCredentials } from './interfaces/IUser';
+import User from './models/User';
 import LocalData from './utils/LocalData';
 
+console.warn('Teste 3...')
 
 // login.js
 const loginForm = document.querySelector('form#login-form') as HTMLFormElement;
@@ -11,24 +14,20 @@ loginForm.addEventListener('submit', async e => {
 
     const form = new FormData(loginForm);
 
-    const data = await fetch('http://localhost/backend/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            email: form.get('email'),
-            main_pass: form.get('main_pass')
-        })
-    });
+    const userCredentials: IUserCredentials = {
+        email: form.get('email') as string,
+        main_pass: form.get('main_pass') as string
+    };
 
-    const userCreated = await data.json();
+    const loginResponse = await User.login(userCredentials);
 
-    if (userCreated.success) {
-        LocalData.set('token', userCreated.data.token as String);
+    if (loginResponse.success) {
+        LocalData.set('token', loginResponse.data?.token as string);
 
         location.href = '/dashboard';
         return;
     }
     
     for (const key of form.keys()) form.delete(key);
-    messageParagraph.textContent = userCreated.message;
+    messageParagraph.textContent = loginResponse.message;
 });

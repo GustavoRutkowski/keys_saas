@@ -4,7 +4,7 @@ class LocalData {
         return JSON.parse(localStorage.getItem(key) as string);
     }
 
-    public static set(key: string, value: object): void {
+    public static set(key: string, value: string | object): void {
         localStorage.setItem(key, JSON.stringify(value));
     }
 }
