@@ -49,7 +49,7 @@ class UsersController extends Controller {
                 $body['picture'] ?? null
             );
 
-            self::send(204, 'user updated successfully');
+            self::send(200, 'user updated successfully');
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
         }
@@ -67,7 +67,7 @@ class UsersController extends Controller {
                 $body['repeat_new_main_pass']
             );
 
-            self::send(204, 'main_pass changed successfully');
+            self::send(200, 'main_pass changed successfully');
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
         }
