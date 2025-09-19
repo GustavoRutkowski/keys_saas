@@ -43,6 +43,9 @@ aside.lateral-bar {
             .user-infos__user_picture {
                 width: 4rem;
                 height: 4rem;
+                border-radius: 50%;
+
+                img { border-radius: 50%; }
             }
 
             .user-infos__nickname {

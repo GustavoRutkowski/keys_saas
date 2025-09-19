@@ -15,7 +15,12 @@ class Api {
     }
 
     public addHeader(key: string, value: string): void {
-        this.headers.append(key, value);
+        if (!this.headers.has('token')) {
+            this.headers.append(key, value);
+            return;
+        }
+
+        this.headers.set(key, value);
     }
 
     private async request(method: THTTPMethod, route: string, args: object): Promise<any> {

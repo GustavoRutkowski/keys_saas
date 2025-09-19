@@ -32,6 +32,11 @@ main {
                 cursor: pointer;
                 transition: .3s all;
 
+                img {
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
                 &:hover {
                     filter: brightness(25%);
                 }
@@ -41,6 +46,10 @@ main {
                 font-size: 5rem;
                 display: flex;
                 gap: 2rem;
+
+                label.user-nickname__nickname:focus {
+                    border-bottom: 2px solid white;
+                }
 
                 button#edit-nickname-btn {
                     color: inherit;

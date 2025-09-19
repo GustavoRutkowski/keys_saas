@@ -1,7 +1,8 @@
 import Api from "../utils/Api";
-import IUser, { IUserCredentials } from '../interfaces/IUser';
+import IUser, { IUserCredentials, IUserUpdateInfos } from '../interfaces/IUser';
 import IResponse from "../interfaces/IResponse";
 import LocalData from "../utils/LocalData";
+
 
 class User {
     private static api: Api = new Api({ url: 'http://localhost:2469/backend' });
@@ -24,6 +25,15 @@ class User {
 
         const user: IResponse = await this.api.get('users/user');        
         return user;
+    }
+
+    // Update Infos:
+    public static async updateInfos(infos: IUserUpdateInfos): Promise<IResponse> {
+        console.log(`Token: ${LocalData.get('token')}`)
+        this.api.addHeader('token', LocalData.get('token') as string);
+
+        const response: IResponse = await this.api.put('users/user', infos);
+        return response;
     }
 }
 
