@@ -11,10 +11,12 @@ const outputRoot = './frontend/public';
 
 const tsConfig = {
     entry: {
-        dashboard: `${tsRoot}/dashboard.ts`,
+        index: `${tsRoot}/index.ts`,
+        faq: `${tsRoot}/faq.ts`,
         login: `${tsRoot}/login.ts`,
         register: `${tsRoot}/register.ts`,
-        index: `${tsRoot}/index.ts`
+        dashboard: `${tsRoot}/dashboard.ts`,
+        'user-settings': `${tsRoot}/user-settings.ts`
     },
 
     output: {

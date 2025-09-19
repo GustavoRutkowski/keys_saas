@@ -1,0 +1,147 @@
+@use "setup/all" as *;
+@use "components/header";
+@use "components/mobile-nav";
+@use "components/scrollbar";
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    section.user-settings {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 4rem;
+
+        .user-settings__user-infos {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+
+            input#user-picture-input {
+                display: none;
+            }
+
+            label.user-infos__picture {
+                width: 15rem;
+                height: 15rem;
+                aspect-ratio: 1;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: .3s all;
+
+                &:hover {
+                    filter: brightness(25%);
+                }
+            }
+
+            .user-infos__user-nickname {
+                font-size: 5rem;
+                display: flex;
+                gap: 2rem;
+
+                button#edit-nickname-btn {
+                    color: inherit;
+                    font-size: inherit;
+                    cursor: pointer;
+                    transition: .2s all;
+
+                    &:hover {
+                        opacity: 0.5;
+                    }
+                }
+            }
+        }
+
+        button#change-password-btn {
+            margin-right: auto;
+            width: fit-content;
+            font-size: 1.5rem;
+            padding: 5px 1rem;
+            border-radius: 5px;
+            box-shadow: $default-shadow;
+            background-color: $primary-color;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: .5s all;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    button#save-changes-btn {
+        padding: 1rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: $default-shadow;
+        background-color: $confirm-color;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+        transition: .5s all;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+dialog#change-password-modal {
+    @include form-box($max-w: fit-content);
+    margin: auto;
+    display: none;
+    border: none;
+    position: relative;
+
+    &:open { display: flex; }
+
+    &::backdrop {
+        filter: blur(10rem);
+    }
+
+    button#close-password-modal-btn {
+        position: absolute;
+        top: $normal-padding;
+        right: $normal-padding;
+        background-color: $cancel-color;
+        width: 2rem;
+        height: 2rem;
+        aspect-ratio: 1;
+        border-radius: 5px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: .3s all;
+
+        &:hover {
+            background-color: $cancel-color-darken;
+        }
+    }
+
+    button#confirm-new-password-btn {
+        padding: 5px 1rem;
+        border-radius: 5px;
+        box-shadow: $default-shadow;
+        background-color: $secondary-color;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+        transition: .5s all;
+
+        &:hover {
+            background-color: $secondary-color-darken;
+        }
+    }
+}

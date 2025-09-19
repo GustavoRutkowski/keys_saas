@@ -31,6 +31,10 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'view', 'dashboard.html'));
 });
 
+app.get('/user-settings', (req, res) => {
+    res.sendFile(path.join(__dirname, 'view', 'user-settings.html'));
+});
+
 app.get('/admin-panel', (req, res) => {
     res.sendFile(path.join(__dirname, 'view', 'admin-panel.html'));
 });
