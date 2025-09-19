@@ -3,7 +3,6 @@ import { IUserCredentials } from './interfaces/IUser';
 import User from './models/User';
 import LocalData from './utils/LocalData';
 
-console.warn('Teste 3...')
 
 // login.js
 const loginForm = document.querySelector('form#login-form') as HTMLFormElement;
@@ -22,7 +21,7 @@ loginForm.addEventListener('submit', async e => {
     const loginResponse = await User.login(userCredentials);
 
     if (loginResponse.success) {
-        LocalData.set('token', loginResponse.data?.token as string);
+        LocalData.set('token', loginResponse.data.token as string);
 
         location.href = '/dashboard';
         return;

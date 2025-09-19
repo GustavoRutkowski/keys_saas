@@ -14,6 +14,10 @@ class Api {
         this.headers = new Headers(headers || {});
     }
 
+    public addHeader(key: string, value: string): void {
+        this.headers.append(key, value);
+    }
+
     private async request(method: THTTPMethod, route: string, args: object): Promise<any> {
         const headersCopy = new Headers(this.headers);
 

@@ -5,7 +5,11 @@ class LocalData {
     }
 
     public static set(key: string, value: string | object): void {
-        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+    }
+
+    public static remove(key: string): void {
+        localStorage.removeItem(key);
     }
 }
 

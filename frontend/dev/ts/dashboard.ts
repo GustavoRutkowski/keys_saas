@@ -1,13 +1,12 @@
+import Header from './components/Header';
 import LoaderMenu from "./components/LoaderMenu";
-import LocalData from "./utils/LocalData";
-import setupHeader from "./utils/setupHeader";
-
-setupHeader(
-    LocalData.get('token') as string,
-    document.querySelector('ul.header-navigator__links-list') as HTMLElement
-);
-
+import User from './models/User';
+import LocalData from './utils/LocalData';
 customElements.define('loader-menu', LoaderMenu);
+
+new Header();
+
+// Insere o LoaderMenu
 
 const loaderMenu = document.createElement('loader-menu') as LoaderMenu;
 
@@ -35,3 +34,22 @@ const aside = document.querySelector('aside.lateral-bar') as HTMLElement;
 const userSection = document.querySelector('section.lateral-bar__user-section') as HTMLElement;
 
 aside.insertBefore(loaderMenu, userSection)
+
+// Insere as informações do usuário
+
+const { data: user } = await User.get();
+
+const pictureImg = document.querySelector('.user-infos__user_picture > img') as HTMLImageElement;
+const nicknameTxt = document.querySelector('.user-infos__nickname') as HTMLSpanElement;
+
+if (user.picture) pictureImg.src = `../public/imgs/upload/${user.picture}`;
+nicknameTxt.textContent = user.name;
+
+// Logout Button
+
+const logoutBtn = document.querySelector('button#user-section__logout-btn') as HTMLButtonElement;
+
+logoutBtn.addEventListener('click', () => {
+    LocalData.remove('token');
+    location.href = '/login';
+});
