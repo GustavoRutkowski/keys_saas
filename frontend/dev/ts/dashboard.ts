@@ -1,9 +1,10 @@
 import Header from './components/Header';
 import LoaderMenu from "./components/LoaderMenu";
-import User from './models/User';
-import LocalData from './utils/LocalData';
+import IResponse from './interfaces/IResponse';
+import UserSession from './models/UserSession';
 customElements.define('loader-menu', LoaderMenu);
 
+const { data: user } = await UserSession.authenticate() as IResponse;
 new Header();
 
 // Insere o LoaderMenu
@@ -37,8 +38,6 @@ aside.insertBefore(loaderMenu, userSection)
 
 // Insere as informações do usuário
 
-const { data: user } = await User.get();
-
 const pictureImg = document.querySelector('.user-infos__user_picture > img') as HTMLImageElement;
 const nicknameTxt = document.querySelector('.user-infos__nickname') as HTMLSpanElement;
 
@@ -48,8 +47,4 @@ nicknameTxt.textContent = user.name;
 // Logout Button
 
 const logoutBtn = document.querySelector('button#user-section__logout-btn') as HTMLButtonElement;
-
-logoutBtn.addEventListener('click', () => {
-    LocalData.remove('token');
-    location.href = '/login';
-});
+logoutBtn.addEventListener('click', UserSession.logout);
