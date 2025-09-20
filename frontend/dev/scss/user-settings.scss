@@ -4,6 +4,7 @@
 @use "components/mobile-nav";
 @use "components/scrollbar";
 @use "components/Modal";
+@use "components/Popup";
 
 main {
     @include flex-column(space-around, center);

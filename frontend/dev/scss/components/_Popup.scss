@@ -1,0 +1,33 @@
+@use '../setup/all' as *;
+
+dialog.pop-up {
+    border: none;
+    @include default-box(
+        $max-w: fit-content,
+        $pad: $normal-padding $mid-padding
+    );
+    @include flex-row($align: center, $gap: $mid-padding);
+    font-size: 1.7rem;
+    position: absolute;
+    left: auto;
+    right: $mid-padding;
+    bottom: $mid-padding;
+    opacity: 0;
+    transition: all .2s ease-in-out;
+
+    &:open {
+        opacity: 1;
+        transform: translateY(-1rem);
+    }
+
+    @starting-style {
+        &:open {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+    }
+
+    &.success i { color: $confirm-color; }
+    &.error { color: $cancel-color; }
+    &.warn { color: $warn-color; }
+}

@@ -21,6 +21,7 @@ class Popup extends UIComponent {
         this.type = type;
 
         this.createElement();
+        document.body.appendChild(this.element as HTMLDialogElement);
     }
 
     public async show() {

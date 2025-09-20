@@ -1,5 +1,6 @@
 import ChangeMainPassModal from './components/ChangeMainPassModal';
 import HeaderLinks from './components/HeaderLinks';
+import Popup from './components/Popup';
 import ToggleViewButton from './components/ToggleViewButton';
 import IFile from './interfaces/IFile';
 import IResponse from './interfaces/IResponse';
@@ -60,8 +61,8 @@ saveChangesBtn.addEventListener('click', async e => {
     e.preventDefault();
     const res: IResponse = await User.updateInfos(updateInfos);
 
-    if (res.success) alert('Atualizado com sucesso');
-    else alert(res.message);
+    const popup = new Popup(res.message, 3000, res.success ? 'success' : 'error');
+    await popup.show();
 });
 
 
