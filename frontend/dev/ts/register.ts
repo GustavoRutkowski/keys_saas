@@ -1,9 +1,9 @@
-import './components/toggle-view-btn';
+import ToggleViewButton from './components/ToggleViewButton';
 import User from './models/User';
 import IUser from './interfaces/IUser';
 
+ToggleViewButton.createAllButtons();
 
-console.warn('Test 2...');
 // register.js
 const registerForm = document.querySelector('form#register-form') as HTMLFormElement;
 const messageParagraph = registerForm.querySelector('p.form-message') as HTMLParagraphElement;

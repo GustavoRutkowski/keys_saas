@@ -1,11 +1,12 @@
 @use "setup/all" as *;
 @use "components/dashboard-content";
-@use "components/header";
+@use "components/ToggleViewButton";
 @use "components/mobile-nav";
 @use "components/modal";
 @use "components/passwords";
 @use "components/scrollbar";
 @use "components/panels-bar";
+@use "components/header";
 @use "panels/all" as *;
 
 aside.lateral-bar {
@@ -17,6 +18,35 @@ aside.lateral-bar {
     overflow: hidden;
     @include flex-column(space-between);
 
+    nav.tabs-menu {
+        width: 100%;
+        height: fit-content;
+
+        ul.dashboard-links {
+            @include flex-column($gap: $short-padding);
+
+            li.dashboard-links__item {
+                padding: 0;
+                @include text-ellipsis;
+                @include flex;
+                @include clickable(.3s);
+
+                &:hover, &.dashboard-links__item--active {
+                    background-color: rgba(black, .2);
+                }
+
+                span {
+                    flex: 1 1 auto;
+                    display: block;
+                    padding: $normal-padding $mid-padding;
+                    min-width: 0;
+                    color: white;
+                    @include text-ellipsis;
+                }
+            }
+        }
+    }
+    
     section.lateral-bar__user-section {
         padding: $normal-padding;
         background-color: $lines-color;
@@ -54,8 +84,8 @@ aside.lateral-bar {
         }
 
         button#user-section__logout-btn {
-            color: $cancel-color;
             @include rounded-square($logout-btn-size, 25%, $cancel-color-backdrop);
+            color: $cancel-color;
             @include clickable(.2s);
 
             &:hover {

@@ -1,0 +1,18 @@
+@use '../setup/all' as *;
+@use '../mixins/all' as *;
+
+button.toggle-view-btn {
+    min-width: fit-content;
+    min-height: fit-content;
+    color: rgba(white, .4);
+    @include clickable(.3s);
+
+    &:hover { color: white }
+
+    i {
+        display: inline-block;
+        min-width: 2rem;
+        min-height: 2rem;
+        color: inherit;
+    }
+}

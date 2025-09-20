@@ -1,8 +1,9 @@
-import './components/toggle-view-btn';
+import ToggleViewButton from './components/ToggleViewButton';
 import { IUserCredentials } from './interfaces/IUser';
 import User from './models/User';
 import LocalData from './utils/LocalData';
 
+ToggleViewButton.createAllButtons();
 
 // login.js
 const loginForm = document.querySelector('form#login-form') as HTMLFormElement;

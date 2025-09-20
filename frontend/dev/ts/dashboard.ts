@@ -1,40 +1,45 @@
-import Header from './components/Header';
-import LoaderMenu from "./components/LoaderMenu";
+import HeaderLinks from './components/HeaderLinks';
+import TabsMenu from './components/TabsMenu';
 import IResponse from './interfaces/IResponse';
 import UserSession from './models/UserSession';
-customElements.define('loader-menu', LoaderMenu);
 
 const { data: user } = await UserSession.authenticate() as IResponse;
-new Header();
+new HeaderLinks().appendInHeader();
 
 // Insere o LoaderMenu
 
-const loaderMenu = document.createElement('loader-menu') as LoaderMenu;
+const panelSelectedSection = document.querySelector('section#panel-selected') as HTMLElement;
 
-loaderMenu.setup({
-    target: 'section#panel-selected',
-    default: 'passwords',
-    
+const tabsMenu = new TabsMenu(panelSelectedSection, {
+    defaultItem: 'passwords',
+    storageKey: 'dashboard__panel-selected',
     items: [
         {
             id: 'passwords', label: 'Senhas',
-            path: '../../public/panels/app/_passwords.html', action: () => console.log('a')
+            path: '../../public/panels/app/_passwords.html', action: () => console.log('passwords')
         },
         {
             id: 'cards', label: 'Cartões',
-            path: '../../public/panels/app/_cards.html', action: () => console.log('b')
+            path: '../../public/panels/app/_cards.html', action: () => console.log('cards')
         },
         {
             id: 'documents', label: 'Documentos Digitalizados',
-            path: '../../public/panels/app/_documents.html', action: () => console.log('c')
+            path: '../../public/panels/app/_documents.html', action: () => console.log('docuemnts')
         }
-    ]
+    ],
+    options: {
+        menuClass: 'dashboard-links',
+        itemClass: 'dashboard-links__item',
+        selectedClass: 'dashboard-links__item--active'
+    }
 });
+
 
 const aside = document.querySelector('aside.lateral-bar') as HTMLElement;
 const userSection = document.querySelector('section.lateral-bar__user-section') as HTMLElement;
 
-aside.insertBefore(loaderMenu, userSection)
+aside.insertBefore(tabsMenu.getElement() as Node, userSection);
+
 
 // Insere as informações do usuário
 
