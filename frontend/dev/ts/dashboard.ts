@@ -1,9 +1,10 @@
 import HeaderLinks from './components/HeaderLinks';
 import TabsMenu from './components/TabsMenu';
 import IResponse from './interfaces/IResponse';
+import IUserData from './interfaces/IUser';
 import UserSession from './models/UserSession';
 
-const { data: user } = await UserSession.authenticate() as IResponse;
+const user = await UserSession.authenticate() as IUserData;
 new HeaderLinks().appendInHeader();
 
 // Insere o LoaderMenu

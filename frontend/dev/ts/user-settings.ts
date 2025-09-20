@@ -1,15 +1,14 @@
 import HeaderLinks from './components/HeaderLinks';
 import ToggleViewButton from './components/ToggleViewButton';
 import IFile from './interfaces/IFile';
-import IResponse from './interfaces/IResponse';
-import { IUserUpdateInfos } from './interfaces/IUser';
+import IUserData, { IUserUpdateInfos } from './interfaces/IUser';
 import User from './models/User';
 import UserSession from './models/UserSession';
 import toBase64 from './utils/toBase64';
 
 ToggleViewButton.createAllButtons();
 
-const { data: user } = await UserSession.authenticate() as IResponse;
+const user = await UserSession.authenticate() as IUserData;
 new HeaderLinks().appendInHeader();
 
 // Editar Informações:
