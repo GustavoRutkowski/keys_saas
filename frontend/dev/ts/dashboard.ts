@@ -15,15 +15,15 @@ const tabsMenu = new TabsMenu(panelSelectedSection, {
     storageKey: 'dashboard__panel-selected',
     items: [
         {
-            id: 'passwords', label: 'Senhas',
+            id: 'passwords', label: 'Senhas', faIcon: 'fa-key',
             path: '../../public/panels/app/_passwords.html', action: () => console.log('passwords')
         },
         {
-            id: 'cards', label: 'Cartões',
+            id: 'cards', label: 'Cartões', faIcon: 'fa-credit-card',
             path: '../../public/panels/app/_cards.html', action: () => console.log('cards')
         },
         {
-            id: 'documents', label: 'Documentos Digitalizados',
+            id: 'documents', label: 'Documentos Digitalizados', faIcon: 'fa-id-card',
             path: '../../public/panels/app/_documents.html', action: () => console.log('docuemnts')
         }
     ],

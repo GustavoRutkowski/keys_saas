@@ -26,9 +26,9 @@ aside.lateral-bar {
             @include flex-column($gap: $short-padding);
 
             li.dashboard-links__item {
-                padding: 0;
+                padding: $normal-padding $mid-padding;
                 @include text-ellipsis;
-                @include flex;
+                @include flex-row($align: center, $gap: $normal-padding);
                 @include clickable(.3s);
 
                 &:hover, &.dashboard-links__item--active {
@@ -38,7 +38,6 @@ aside.lateral-bar {
                 span {
                     flex: 1 1 auto;
                     display: block;
-                    padding: $normal-padding $mid-padding;
                     min-width: 0;
                     color: white;
                     @include text-ellipsis;

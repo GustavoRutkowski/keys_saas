@@ -195,8 +195,8 @@ class TabsMenu extends UIComponent {
         const notifyElement = notify ? `<span class="${notifyElementClasses.join(' ')}"></span>` : ''
 
         const faIconFrame = faIcon ? `
-            <div class="${frameClass}">
-                <i class="${iconClass} ${faIcon}"></i>
+            <div class="${frameClass ?? 'frame'}">
+                <i class="${iconClass ?? 'fa-solid'} ${faIcon}"></i>
             </div>
         ` : '';
 
