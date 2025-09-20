@@ -1,4 +1,4 @@
-@mixin flexbox($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap, $gap: 0) {
+@mixin flex($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap, $gap: 0) {
     display: flex;
     flex-direction: $direction;
     justify-content: $justify;
@@ -7,14 +7,24 @@
     gap: $gap;
 }
 
+@mixin flex-none($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap, $gap: 0) {
+    @include flex($direction, $justify, $align, $wrap, $gap);
+    display: none;
+}
+
 @mixin flex-row($justify: flex-start, $align: stretch, $wrap: nowrap, $gap: 0) {
-    @include flexbox(row, $justify, $align, $wrap, $gap);
+    @include flex(row, $justify, $align, $wrap, $gap);
 }
 
 @mixin flex-column($justify: flex-start, $align: stretch, $wrap: nowrap, $gap: 0) {
-    @include flexbox(column, $justify, $align, $wrap, $gap);
+    @include flex(column, $justify, $align, $wrap, $gap);
 }
 
 @mixin flex-center($wrap: nowrap, $gap: 0) {
-    @include flexbox(row, center, center, $wrap, $gap);
+    @include flex(row, center, center, $wrap, $gap);
+}
+
+// Legado:
+@mixin flexbox($direction: row, $justify: flex-start, $align: stretch, $wrap: nowrap, $gap: 0) {
+    @include flex($direction, $justify, $align, $wrap, $gap);
 }

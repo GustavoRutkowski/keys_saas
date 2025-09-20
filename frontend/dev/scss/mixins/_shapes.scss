@@ -1,7 +1,9 @@
+@use 'auto-contrast' as *;
+
 @mixin shape($bg: transparent, $border: none) {
-    background-color: $bg;
     border: $border;
-};
+    @include auto-contrast($bg);
+}
 
 @mixin rectangle($w: fit-content, $h: fit-content, $bg: transparent, $border: none) {
     width: $w;
@@ -15,7 +17,11 @@
     @include rectangle($size, $size, $bg, $border);
 }
 
-@mixin circle($size: fit-content, $bg: transparent, $border: none) {
-    border-radius: 50%;
+@mixin rounded-square($size: fit-content, $b-radius, $bg: transparent, $border: none) {
+    border-radius: $b-radius;
     @include square($size, $bg, $border);
+}
+
+@mixin circle($size, $bg: transparent, $border: none) {
+    @include rounded-square($size, 50%, $bg, $border);
 }

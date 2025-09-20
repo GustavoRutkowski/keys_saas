@@ -4,152 +4,103 @@
 @use "components/scrollbar";
 
 main {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    @include flex-column(space-around, center);
 
     section.user-settings {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 4rem;
+        @include flex-column(space-between, $gap: $large-padding);
 
         .user-settings__user-infos {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
+            @include flex-row($align: center, $gap: $normal-mid-padding);
 
-            input#user-picture-input {
-                display: none;
-            }
+            input#user-picture-input { display: none }
 
             label.user-infos__picture {
-                width: 15rem;
-                height: 15rem;
-                aspect-ratio: 1;
-                border-radius: 50%;
-                cursor: pointer;
-                transition: .3s all;
+                outline: 4px solid white;
+                @include circle($large-user-picture-size, $border: 3px solid black);
+                @include clickable(.3s);
 
                 img {
                     object-fit: cover;
-                    border-radius: 50%;
+                    border-radius: inherit;
+                    transition: inherit;
                 }
 
-                &:hover {
-                    filter: brightness(25%);
-                }
+                &:hover img { filter: brightness(25%) }
             }
 
             .user-infos__user-nickname {
                 font-size: 5rem;
-                display: flex;
-                gap: 2rem;
+                @include flex-row($gap: $mid-padding);
 
                 label.user-nickname__nickname:focus {
                     border-bottom: 2px solid white;
                 }
 
                 button#edit-nickname-btn {
-                    color: inherit;
                     font-size: inherit;
-                    cursor: pointer;
-                    transition: .2s all;
+                    color: inherit;
+                    @include clickable(.2s);
 
-                    &:hover {
-                        opacity: 0.5;
-                    }
+                    &:hover { opacity: 0.5 }
                 }
             }
         }
 
         button#change-password-btn {
             margin-right: auto;
-            width: fit-content;
-            font-size: 1.5rem;
-            padding: 5px 1rem;
-            border-radius: 5px;
+            font-size: $default-font-size;
             box-shadow: $default-shadow;
-            background-color: $primary-color;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            cursor: pointer;
-            transition: .5s all;
-
-            &:hover {
-                opacity: 0.8;
-            }
+            @include icon-text-btn(
+                $primary-color,
+                5px $normal-padding,
+                $normal-padding, $tiny-radius, .5s
+            );
         }
     }
 
     button#save-changes-btn {
-        padding: 1rem 1.5rem;
-        border-radius: 1rem;
         box-shadow: $default-shadow;
-        background-color: $confirm-color;
-        color: white;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        cursor: pointer;
-        transition: .5s all;
-
-        &:hover {
-            opacity: 0.8;
-        }
+        @include icon-text-btn(
+            $confirm-color,
+            $normal-padding $short-normal-padding,
+            $normal-padding, $normal-radius, .5s
+        );
     }
 }
 
 dialog#change-password-modal {
-    @include form-box($max-w: fit-content);
-    margin: auto;
-    display: none;
     border: none;
     position: relative;
+    @include form-box($max-w: fit-content, $margin: auto);
+    display: none;
 
-    &:open { display: flex; }
-
-    &::backdrop {
-        filter: blur(10rem);
-    }
+    &:open { display: flex }
+    &::backdrop { filter: blur(10rem) }
 
     button#close-password-modal-btn {
         position: absolute;
         top: $normal-padding;
         right: $normal-padding;
-        background-color: $cancel-color;
-        width: 2rem;
-        height: 2rem;
-        aspect-ratio: 1;
-        border-radius: 5px;
+        @include rounded-square(2rem, 5px, $cancel-color);
         color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: .3s all;
-
-        &:hover {
-            background-color: $cancel-color-darken;
-        }
+        @include flex-center;
+        @include clickable(.3s);
+        
+        &:hover { background-color: $cancel-color-darken }
     }
 
     button#confirm-new-password-btn {
-        padding: 5px 1rem;
-        border-radius: 5px;
+        margin-top: $large-padding;
         box-shadow: $default-shadow;
-        background-color: $secondary-color;
-        color: white;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        cursor: pointer;
-        transition: .5s all;
+        @include icon-text-btn(
+            $secondary-color,
+            $short-padding $normal-padding,
+            $normal-padding, $tiny-radius, .5s
+        );
 
+        color: white;
         &:hover {
+            opacity: 1;
             background-color: $secondary-color-darken;
         }
     }

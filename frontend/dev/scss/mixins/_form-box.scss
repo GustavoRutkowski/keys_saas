@@ -4,8 +4,8 @@
 @use 'flexbox' as *;
 @use 'form-field' as *;
 
-@mixin form-box($min-w: 40%, $max-w: 95%) {
-    margin: $large-padding auto;
+@mixin form-box($min-w: 40%, $max-w: 95%, $margin: $large-padding auto) {
+    margin: $margin;
     font-size: $default-font-size;
     
     @include default-box($min-w, $max-w);
