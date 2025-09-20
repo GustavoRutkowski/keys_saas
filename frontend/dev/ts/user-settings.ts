@@ -4,6 +4,7 @@ import IResponse from './interfaces/IResponse';
 import { IUserUpdateInfos } from './interfaces/IUser';
 import User from './models/User';
 import UserSession from './models/UserSession';
+import toBase64 from './utils/toBase64';
 
 const { data: user } = await UserSession.authenticate() as IResponse;
 
@@ -42,21 +43,15 @@ pictureInput.addEventListener('change', () => {
     const imgFile = pictureInput.files?.[0] as File | null;
     if (!imgFile) return;
 
-    const fileReader: FileReader = new FileReader();
+    const base64: string = toBase64(imgFile) as string;
+    pictureImg.src = base64;
 
-    fileReader.onload = e => {
-        const base64: string = e.target?.result as string;
-        pictureImg.src = base64;
-        
-        const picture: IFile = {
-            filename: imgFile.name,
-            data: base64.split(',')[1] // Remove o prefixo
-        };
-        
-        updateInfos.picture = picture;
+    const picture: IFile = {
+        filename: imgFile.name,
+        data: base64.split(',')[1] // Remove o prefixo
     };
-
-    fileReader.readAsDataURL(imgFile);
+    
+    updateInfos.picture = picture;
 });
 
 const saveChangesBtn = document.querySelector('button#save-changes-btn') as HTMLButtonElement;
