@@ -10,6 +10,7 @@ abstract class Modal extends UIComponent {
     constructor(open: boolean = false) {
         super();
         this.createElement();
+        this.appendInBody();
 
         if (open) this.show();
     }
@@ -24,20 +25,27 @@ abstract class Modal extends UIComponent {
         modal.close();
     }
 
+    public appendInBody(): void {
+        document.body.appendChild(this.element as HTMLDialogElement);
+    }
+
     protected abstract createModalContent(): void;
 
     protected createElement(): void {
         const modal = document.createElement('dialog') as HTMLDialogElement;
         modal.classList.add(this.identifierClass);
-
-        const modalCloseBtn = document.createElement('button') as HTMLButtonElement;
-        modalCloseBtn.classList.add('modal__close-btn');
-
-        modalCloseBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-        modalCloseBtn.addEventListener('click', this.close);
-
+        
+        modal.innerHTML = `
+            <button class="modal__close-btn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        `;
+        
         this.element = modal;
         this.createModalContent();
+
+        const modalCloseBtn = modal.querySelector('button.modal__close-btn') as HTMLButtonElement;
+        modalCloseBtn.addEventListener('click', () => this.close());
     }
 }
 

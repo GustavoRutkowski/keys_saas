@@ -1,7 +1,11 @@
 @use '../setup/vars' as *;
 @use 'auto-contrast' as *;
 
-@mixin default-box($min-w: auto, $max-w: none, $pad: $mid-padding) {
+@mixin default-box($min-w: auto, $max-w: none, $margin: none, $pad: $mid-padding) {
+    @if ($margin != none) {
+        margin: $margin;
+    }
+
     padding: $pad;
     border-radius: $tiny-radius;
     min-width: $min-w;

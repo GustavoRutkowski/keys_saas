@@ -29,5 +29,5 @@ loginForm.addEventListener('submit', async e => {
     }
     
     for (const key of form.keys()) form.delete(key);
-    messageParagraph.textContent = loginResponse.message;
+    alert(loginResponse.message);
 });

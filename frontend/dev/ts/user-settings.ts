@@ -1,6 +1,8 @@
+import ChangeMainPassModal from './components/ChangeMainPassModal';
 import HeaderLinks from './components/HeaderLinks';
 import ToggleViewButton from './components/ToggleViewButton';
 import IFile from './interfaces/IFile';
+import IResponse from './interfaces/IResponse';
 import IUserData, { IUserUpdateInfos } from './interfaces/IUser';
 import User from './models/User';
 import UserSession from './models/UserSession';
@@ -38,11 +40,11 @@ if (user.picture) pictureImg.src = `../public/imgs/upload/${user.picture}`;
 
 const pictureInput = document.querySelector('input#user-picture-input') as HTMLInputElement;
 
-pictureInput.addEventListener('change', () => {
+pictureInput.addEventListener('change', async () => {
     const imgFile = pictureInput.files?.[0] as File | null;
     if (!imgFile) return;
 
-    const base64: string = toBase64(imgFile) as string;
+    const base64 = await toBase64(imgFile) as string;
     pictureImg.src = base64;
 
     const picture: IFile = {
@@ -56,7 +58,17 @@ pictureInput.addEventListener('change', () => {
 const saveChangesBtn = document.querySelector('button#save-changes-btn') as HTMLButtonElement;
 saveChangesBtn.addEventListener('click', async e => {
     e.preventDefault();
-    console.log(await User.updateInfos(updateInfos));
+    const res: IResponse = await User.updateInfos(updateInfos);
 
-    alert('Atualizado com sucesso');
+    if (res.success) alert('Atualizado com sucesso');
+    else alert(res.message);
 });
+
+
+// Change Password Modal:
+
+const modal = new ChangeMainPassModal();
+ToggleViewButton.createAllButtons(modal.getElement() as ParentNode);
+
+const changePasswordBtn = document.querySelector('button#change-password-btn') as HTMLButtonElement;
+changePasswordBtn.addEventListener('click', () => modal.show());

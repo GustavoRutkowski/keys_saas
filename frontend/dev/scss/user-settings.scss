@@ -3,6 +3,7 @@
 @use "components/header";
 @use "components/mobile-nav";
 @use "components/scrollbar";
+@use "components/Modal";
 
 main {
     @include flex-column(space-around, center);
@@ -69,26 +70,9 @@ main {
     }
 }
 
-dialog#change-password-modal {
-    border: none;
-    position: relative;
-    @include form-box($max-w: fit-content, $margin: auto);
+dialog.change-password-modal {
+    @include form-box(10%, fit-content, auto);
     display: none;
-
-    &:open { display: flex }
-    &::backdrop { filter: blur(10rem) }
-
-    button#close-password-modal-btn {
-        position: absolute;
-        top: $normal-padding;
-        right: $normal-padding;
-        @include rounded-square(2rem, 5px, $cancel-color);
-        color: white;
-        @include flex-center;
-        @include clickable(.3s);
-        
-        &:hover { background-color: $cancel-color-darken }
-    }
 
     button#confirm-new-password-btn {
         margin-top: $large-padding;

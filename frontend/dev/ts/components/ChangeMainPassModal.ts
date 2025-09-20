@@ -1,21 +1,48 @@
+import { IUserChangePasswordInfos } from "../interfaces/IUser";
+import User from "../models/User";
 import Modal from "./Modal";
 
 class ChangeMainPassModal extends Modal {
     protected customClass: string = 'change-password-modal';
 
-    constructor() { super(); }
+    constructor() {
+        super();
+        this.element?.classList.add(this.customClass);
+    }
 
-    private confirmNewPassword(): void {
-        // Lógica de requisição para change main pass...
-        console.log('In progress...');
+    private addSubmitEvent(): void {
+        const modal = this.element as HTMLDialogElement;
+        const form = modal.querySelector('form') as HTMLFormElement;
+
+        
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            console.log('click');
+            
+            const formData = new FormData(form);
+            
+            const credentials: IUserChangePasswordInfos = {
+                main_pass: formData.get('main_pass') as string,
+                new_main_pass: formData.get('new_main_pass') as string,
+                repeat_new_main_pass: formData.get('repeat_new_main_pass') as string
+            };
+
+            const res = await User.changePassword(credentials);
+
+            if (res.success) alert('Senha atualizada com sucesso!');
+            else alert(res.message);
+
+            this.close();
+        });
     }
 
     protected createModalContent(): void {
         const modal = this.element as HTMLDialogElement;
+
         modal.innerHTML += `
             <h2>Trocar Senha</h2>
 
-            <form class="change-password-modal__form">
+            <form id="change-password-modal__form" class="change-password-modal__form">
                 <fieldset class="form__form-field">
                     <label for="main-pass-input">Senha Atual</label>
 
@@ -38,7 +65,7 @@ class ChangeMainPassModal extends Modal {
                     <label for="confirm-new-pass-input">Confirmar a Nova Senha</label>
 
                     <div class="form-field__pass-container">
-                        <input name="confirm_new_main_pass" class="form-field__input" id="confirm-new-pass-input" type="password" placeholder="Digite sua senha" autocomplete="current-password">
+                        <input name="repeat_new_main_pass" class="form-field__input" id="confirm-new-pass-input" type="password" placeholder="Digite sua senha" autocomplete="current-password">
                         <!-- BOTÃO SERÁ INSERIDO DINAMICAMENTE -->
                     </div>
                 </fieldset>
@@ -47,16 +74,17 @@ class ChangeMainPassModal extends Modal {
 
         const confirmNewPassBtn = document.createElement('button') as HTMLButtonElement;
         confirmNewPassBtn.id = 'confirm-new-password-btn';
+        confirmNewPassBtn.type = 'submit';
+        confirmNewPassBtn.setAttribute('form', 'change-password-modal__form');
 
         confirmNewPassBtn.innerHTML = `
             <i class="fa-solid fa-key"></i>
             <span>Trocar Senha</span>
         `;
 
-        confirmNewPassBtn.addEventListener('click', this.confirmNewPassword);
         modal.appendChild(confirmNewPassBtn);
-
         this.element = modal;
+        this.addSubmitEvent();
     }
 }
 

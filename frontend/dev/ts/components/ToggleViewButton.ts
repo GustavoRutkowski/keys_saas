@@ -44,8 +44,8 @@ class ToggleViewButton extends UIComponent {
         this.target.insertAdjacentElement('afterend', this.element as Element);
     }
 
-    public static createAllButtons(): void {
-        const inputPasswords = document.querySelectorAll('input[type="password"]') as NodeListOf<HTMLInputElement>;
+    public static createAllButtons(node: ParentNode = document): void {
+        const inputPasswords = node.querySelectorAll('input[type="password"]') as NodeListOf<HTMLInputElement>;
 
         inputPasswords.forEach(input => {
             const toggleViewBtn = new ToggleViewButton(input);

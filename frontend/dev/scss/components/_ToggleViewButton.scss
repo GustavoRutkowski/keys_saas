@@ -8,6 +8,7 @@ button.toggle-view-btn {
     @include clickable(.3s);
 
     &:hover { color: white }
+    &:focus { border-bottom: 2px solid }
 
     i {
         display: inline-block;
