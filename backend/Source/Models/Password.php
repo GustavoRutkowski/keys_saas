@@ -30,6 +30,21 @@ class Password extends Model
         $this->software_id = $software_id;
     }
 
+    private static function sudoAuthenticate(string $sudo_token) {
+        if (!$sudo_token) throw new ModelException('token is required');
+
+        $jwt = JWTToken::from($sudo_token);
+        if ($jwt === null)
+            throw new ModelException('expired or invalid SUDO token!', 401);
+
+        $res = JWTToken::verify($jwt);
+        if (!$res['valid'])
+            throw new ModelException('expired or invalid SUDO token!', 401);
+
+        $user_id = $res['decoded_token']->user_id;
+        return $user_id;
+    }
+
     public static function create(string $token, string $value, ?int $software_id = null) {
         $user_id = self::authenticate($token);
 
@@ -66,9 +81,10 @@ class Password extends Model
         return $results[0];
     }
 
-    public static function update(string $token, int $id, ?string $value, ?int $software_id)
+    public static function update(string $token, string $sudo_token, int $id, ?string $value, ?int $software_id)
     {
         $user_id = self::authenticate($token);
+        self::sudoAuthenticate($sudo_token);
 
         $fields = [];
         $params = [];
@@ -91,9 +107,10 @@ class Password extends Model
         return true;
     }
 
-    public static function delete(string $token, int $id)
+    public static function delete(string $token, string $sudo_token, int $id)
     {
         $user_id = self::authenticate($token);
+        self::sudoAuthenticate($sudo_token);
 
         $query = "DELETE FROM passwords WHERE id = ? AND user_id = ?";
 

@@ -49,13 +49,14 @@ class PasswordsController extends Controller {
 
     public static function updatePassword(int $id) {
         $token = self::getRequestData()['headers']['token'] ?? null;
+        $sudo_token = self::getRequestData()['headers']['sudo_token'] ?? null;
         $body = self::getRequestData()['body'];
 
         $value = $body['value'] ?? null;
         $software_id = $body['software_id'] ?? null;
 
         try {
-            Password::update($token, (int)$id, $value, $software_id);
+            Password::update($token, $sudo_token, (int)$id, $value, $software_id);
             self::send(200, 'password updated successfully');
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
@@ -64,9 +65,10 @@ class PasswordsController extends Controller {
 
     public static function deletePassword(int $id) {
         $token = self::getRequestData()['headers']['token'] ?? null;
+        $sudo_token = self::getRequestData()['headers']['sudo_token'] ?? null;
         
         try {
-            $result = Password::delete($token, (int)$id);
+            $result = Password::delete($token, $sudo_token, (int)$id);
             self::send(200, 'password deleted successfully');
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
