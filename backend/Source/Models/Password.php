@@ -6,6 +6,7 @@ use Source\Utils\Connect;
 use Exception;
 use Source\Models\Model;
 use Source\Utils\ModelException;
+use Source\Utils\JWTToken;
 
 class Password extends Model
 {
@@ -101,6 +102,28 @@ class Password extends Model
             throw new ModelException('password not found or not owned by user', 404);
         
         return true;
+    }
+
+    public static function sudoStart(string $token, string $main_pass) {
+        $user_id = self::authenticate($token);
+
+        if (!$main_pass)
+            throw new ModelException('main_pass is required');
+
+        $query = 'SELECT main_pass FROM users WHERE id = ?';
+
+        $results = Connect::execute($query, [ $user_id ])['data'];
+        if (count($results) === 0)
+            throw new ModelException('user not found', 404);
+
+        $user = $results[0];
+
+        $passwordIsValid = password_verify($main_pass, $user['main_pass']);
+        if (!$passwordIsValid)
+            throw new ModelException('invalid attempt', 401);
+
+        $token = new JWTToken([ 'user_id' => $user_id ], '+5 minutes');
+        return $token->getToken();
     }
 
     public function getId(): ?int { return $this->id; }

@@ -56,7 +56,7 @@ class PasswordsController extends Controller {
 
         try {
             Password::update($token, (int)$id, $value, $software_id);
-            self::send(204, 'password updated successfully');
+            self::send(200, 'password updated successfully');
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
         }
@@ -67,7 +67,19 @@ class PasswordsController extends Controller {
         
         try {
             $result = Password::delete($token, (int)$id);
-            self::send(204, 'password deleted successfully');
+            self::send(200, 'password deleted successfully');
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
+    }
+
+    public static function sudoModeStart() {
+        $token = self::getRequestData()['headers']['token'] ?? null;
+        $main_pass = self::getRequestData()['body'] ?? null;
+
+        try {
+            $sudo_token = Password::sudoStart($token, $main_pass);
+            self::send(200, 'sudo mode started successfully', data: [ 'sudo_token' => $sudo_token ]);
         } catch(ModelException $e) {
             self::send($e->getHttpStatus(), $e->getMessage());
         }

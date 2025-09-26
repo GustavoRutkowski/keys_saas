@@ -160,7 +160,7 @@ class User extends Model {
 
         $passwordIsValid = password_verify($main_pass, $user['main_pass']);
         if (!$passwordIsValid)
-            throw new ModelException('invalid attempt', 403);
+            throw new ModelException('invalid attempt', 401);
 
         $token = new JWTToken([ 'id' => $user['id'], 'email' => $user['email'] ]);
         return $token->getToken();

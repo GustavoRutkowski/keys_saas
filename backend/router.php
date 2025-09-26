@@ -53,6 +53,8 @@ $router->mount('/passwords', function() use ($router) {
     $router->put('/update/{id}', fn($id) => PasswordsController::updatePassword($id));
 
     $router->delete('/delete/{id}', fn($id) => PasswordsController::deletePassword($id));
+    
+    $router->post('/sudo', fn() => PasswordsController::sudoModeStart());
 });
 
 // Softwares

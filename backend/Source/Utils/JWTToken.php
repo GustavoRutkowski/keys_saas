@@ -104,18 +104,7 @@ class JWTToken
         }
     }
 
-    public function getToken(): string
-    {
-        return $this->value;
-    }
-
-    public function getPayload(): array
-    {
-        return $this->payload;
-    }
-
-    public function getExpires(): string
-    {
-        return $this->expires;
-    }
+    public function getToken(): string { return $this->value; }
+    public function getPayload(): array { return $this->payload; }
+    public function getExpires(): string { return $this->expires; }
 }
