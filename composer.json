@@ -14,7 +14,7 @@
     }
   ],
   "config": {
-    "vendor-dir": "backend/vendor-host"
+    "vendor-dir": "backend/vendor"
   },
   "autoload": {
     "psr-4": {
