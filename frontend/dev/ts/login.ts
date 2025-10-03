@@ -7,12 +7,16 @@ ToggleViewButton.createAllButtons();
 
 // login.js
 const loginForm = document.querySelector('form#login-form') as HTMLFormElement;
-const messageParagraph = loginForm.querySelector('p.form-message') as HTMLParagraphElement;
 
 loginForm.addEventListener('submit', async e => {
     e.preventDefault();
 
     const form = new FormData(loginForm);
+
+    const EMAIL_REGEXP = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    if (!EMAIL_REGEXP.test(form.get('email') as string)) {
+        alert('invalid email format');
+    }
 
     const userCredentials: IUserCredentials = {
         email: form.get('email') as string,
