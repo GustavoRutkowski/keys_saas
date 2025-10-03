@@ -1,8 +1,9 @@
-import './components/toggle-view-btn';
+import ToggleViewButton from './components/ToggleViewButton';
 import { IUserCredentials } from './interfaces/IUser';
 import User from './models/User';
 import LocalData from './utils/LocalData';
 
+ToggleViewButton.createAllButtons();
 
 // login.js
 const loginForm = document.querySelector('form#login-form') as HTMLFormElement;
@@ -28,5 +29,5 @@ loginForm.addEventListener('submit', async e => {
     }
     
     for (const key of form.keys()) form.delete(key);
-    messageParagraph.textContent = loginResponse.message;
+    alert(loginResponse.message);
 });

@@ -9,16 +9,21 @@ $secondary-color       : #ff79c6;
 $secondary-color-darken: #ff58b7;
 $cancel-color          : #ff5a5a;
 $cancel-color-darken   : #c03535;
+$cancel-color-backdrop : #800c0c;
 $confirm-color         : #4aa340;
+$warn-color            : #ffcb37;
     // Contrasts
     $primary-contrast: gc.get-contrast($primary-color);
 
 // Sizes
 
-$scrollbar-width : 1rem;
-$close-btn-size  : 2.5rem;
-$default-btn-size: 3.5rem;
-$mobnav-btn-size : 6rem;
+$user-picture-size      : 4rem;
+$large-user-picture-size: 15rem;
+$logout-btn-size        : 3rem;
+$scrollbar-width        : 1rem;
+$close-btn-size         : 2.5rem;
+$default-btn-size       : 3.5rem;
+$mobnav-btn-size        : 6rem;
 
 // Breakpoint Medias
 
@@ -53,6 +58,10 @@ $short-padding : .5rem;
 $normal-padding: $short-padding * 2;
 $mid-padding   : $normal-padding * 2;
 $large-padding : $mid-padding * 2;
+    // Combinations:
+    $short-normal-padding: $short-padding + $normal-padding;
+    $short-mid-padding   : $short-padding + $mid-padding;
+    $normal-mid-padding  : $normal-padding + $mid-padding;
 
 // Borders
 
@@ -60,9 +69,10 @@ $default-border       : 2px solid $lines-color;
 $default-dashed-border: 3px dashed $lines-color;
 $secondary-border     : 2px solid $secondary-color;
     // Border Radius
-    $tiny-radius : .4rem;
-    $input-radius: .5rem;
-    $large-radius: 2rem;
+    $tiny-radius  : .4rem;
+    $input-radius : .5rem;
+    $normal-radius: 1rem;
+    $large-radius : $normal-radius * 2;
 
 // Shadows
 

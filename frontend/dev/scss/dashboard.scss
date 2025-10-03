@@ -1,76 +1,95 @@
 @use "setup/all" as *;
 @use "components/dashboard-content";
-@use "components/header";
+@use "components/ToggleViewButton";
 @use "components/mobile-nav";
 @use "components/modal";
 @use "components/passwords";
 @use "components/scrollbar";
 @use "components/panels-bar";
+@use "components/header";
 @use "panels/all" as *;
 
 aside.lateral-bar {
-    padding: 2rem 0 0 0;
+    padding-top: $mid-padding;
     width: 100%;
     max-width: calc(100dvw / 6);
-    font-size: 1.8rem;
-    background-color: #343746;
+    font-size: $large-font-size;
+    background-color: $primary-color;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    @include flex-column(space-between);
 
+    nav.tabs-menu {
+        width: 100%;
+        height: fit-content;
+
+        ul.dashboard-links {
+            @include flex-column($gap: $short-padding);
+
+            li.dashboard-links__item {
+                padding: $normal-padding $mid-padding;
+                @include text-ellipsis;
+                @include flex-row($align: center, $gap: $normal-padding);
+                @include clickable(.3s);
+
+                &:hover, &.dashboard-links__item--active {
+                    background-color: rgba(black, .2);
+                }
+
+                span {
+                    flex: 1 1 auto;
+                    display: block;
+                    min-width: 0;
+                    color: white;
+                    @include text-ellipsis;
+                }
+            }
+        }
+    }
+    
     section.lateral-bar__user-section {
-        padding: 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #1e2129;
-        transition: 0.5s all;
-        cursor: pointer;
+        padding: $normal-padding;
+        background-color: $lines-color;
+        @include flex-row(space-between, center);
+        @include clickable(.5s);
 
         &:hover {
-            background-color: #282c36;
-            border-radius: 1.5rem 1.5rem 0 0;
+            background-color: $backdrop-color;
+            border-radius: $short-normal-padding $short-normal-padding 0 0;
         }
 
-        .user-section__user-infos {
-            width: 100%;
+        a {
+            color: white;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-
-            .user-infos__user_picture {
-                width: 4rem;
-                height: 4rem;
-                border-radius: 50%;
-
-                img { border-radius: 50%; }
-            }
-
-            .user-infos__nickname {
-                flex: 1 0;
-                white-space: nowrap;
+            
+            .user-section__user-infos {
+                width: 100%;
                 overflow: hidden;
-                text-overflow: ellipsis;
+                @include flex-row($align: center, $gap: $normal-padding);
+    
+                .user-infos__user_picture {
+                    @include circle($user-picture-size);
+    
+                    img {
+                        object-fit: cover;
+                        border-radius: 50%;
+                    }
+                }
+    
+                .user-infos__nickname {
+                    flex: 1 0;
+                    @include text-ellipsis;
+                }
             }
         }
 
         button#user-section__logout-btn {
-            color: #ff6969;
-            width: 3rem;
-            height: 3rem;
-            aspect-ratio: 1;
-            background-color: #800c0c;
-            border-radius: 25%;
-            cursor: pointer;
-            transition: 0.2s all;
+            @include rounded-square($logout-btn-size, 25%, $cancel-color-backdrop);
+            color: $cancel-color;
+            @include clickable(.2s);
 
             &:hover {
                 transform: scale(1.1);
-                color: #ff9090;
-                background-color: #a52424;
-                // border-radius: 50%;
+                filter: brightness(1.2);
             }
         }
     }

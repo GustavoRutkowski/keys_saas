@@ -1,15 +1,18 @@
-import './components/toggle-view-btn';
+import ChangeMainPassModal from './components/ChangeMainPassModal';
+import HeaderLinks from './components/HeaderLinks';
+import Popup from './components/Popup';
+import ToggleViewButton from './components/ToggleViewButton';
 import IFile from './interfaces/IFile';
 import IResponse from './interfaces/IResponse';
-import { IUserUpdateInfos } from './interfaces/IUser';
+import IUserData, { IUserUpdateInfos } from './interfaces/IUser';
 import User from './models/User';
 import UserSession from './models/UserSession';
+import toBase64 from './utils/toBase64';
 
-const { data: user } = await UserSession.authenticate() as IResponse;
+ToggleViewButton.createAllButtons();
 
-// Ao enviar foto de perfil
-// Criptografa-la em Base64
-// Fazer a requisiçãO
+const user = await UserSession.authenticate() as IUserData;
+new HeaderLinks().appendInHeader();
 
 // Editar Informações:
 
@@ -38,31 +41,35 @@ if (user.picture) pictureImg.src = `../public/imgs/upload/${user.picture}`;
 
 const pictureInput = document.querySelector('input#user-picture-input') as HTMLInputElement;
 
-pictureInput.addEventListener('change', () => {
+pictureInput.addEventListener('change', async () => {
     const imgFile = pictureInput.files?.[0] as File | null;
     if (!imgFile) return;
 
-    const fileReader: FileReader = new FileReader();
+    const base64 = await toBase64(imgFile) as string;
+    pictureImg.src = base64;
 
-    fileReader.onload = e => {
-        const base64: string = e.target?.result as string;
-        pictureImg.src = base64;
-        
-        const picture: IFile = {
-            filename: imgFile.name,
-            data: base64.split(',')[1] // Remove o prefixo
-        };
-        
-        updateInfos.picture = picture;
+    const picture: IFile = {
+        filename: imgFile.name,
+        data: base64.split(',')[1] // Remove o prefixo
     };
-
-    fileReader.readAsDataURL(imgFile);
+    
+    updateInfos.picture = picture;
 });
 
 const saveChangesBtn = document.querySelector('button#save-changes-btn') as HTMLButtonElement;
 saveChangesBtn.addEventListener('click', async e => {
     e.preventDefault();
-    console.log(await User.updateInfos(updateInfos));
+    const res: IResponse = await User.updateInfos(updateInfos);
 
-    alert('Atualizado com sucesso');
+    const popup = new Popup(res.message, 3000, res.success ? 'success' : 'error');
+    await popup.show();
 });
+
+
+// Change Password Modal:
+
+const modal = new ChangeMainPassModal();
+ToggleViewButton.createAllButtons(modal.getElement() as ParentNode);
+
+const changePasswordBtn = document.querySelector('button#change-password-btn') as HTMLButtonElement;
+changePasswordBtn.addEventListener('click', () => modal.show());

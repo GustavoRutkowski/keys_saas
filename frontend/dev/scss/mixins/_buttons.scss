@@ -1,8 +1,11 @@
 @use '../setup/vars' as *;
 @use '../functions/get-contrast' as *;
+@use 'auto-contrast' as *;
+@use 'clickable' as *;
 @use 'flexbox' as *;
 @use 'shapes' as *;
 
+// Legado
 @mixin btn($duration: $default-transition) {
     cursor: pointer;
     transition: all $duration;
@@ -49,4 +52,15 @@
     @include btn(.3s);
 
     &:hover { color: get-contrast($context-color) }
+}
+
+@mixin icon-text-btn($bg: transparent, $pad: 0, $gap: 0, $b-radius: 0, $transitionTime: 0) {
+    padding: $pad;
+    border-radius: $b-radius;
+    width: fit-content;
+    @include flex-row($align: center, $gap: $gap);
+    @include auto-contrast($bg);
+    @include clickable($transitionTime);
+
+    &:hover { opacity: 0.7 }
 }

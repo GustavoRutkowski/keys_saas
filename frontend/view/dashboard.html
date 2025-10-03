@@ -18,13 +18,7 @@
     <header>
         <h1>🔑 Keys</h1>
 
-        <nav id="header-navigator">
-            <ul class="header-navigator__links-list">
-                <li class="links-list__item"><a href="/">Início</a></li>
-                <li class="links-list__item"><a href="/faq">Suporte</a></li>
-                <li class="links-list__item"><a href="/dashboard">Painél de Controle</a></li>
-            </ul>
-        </nav>
+        <nav id="header-navigator"></nav>
     </header>
 
     <main>
@@ -37,13 +31,15 @@
             <!-- <loader-menu> -->
             
             <section class="lateral-bar__user-section">
-                <div class="user-section__user-infos" title="configurações de perfil">
-                    <div class="user-infos__user_picture">
-                        <img src="../public/imgs/static/default-picture.png" alt="foto de perfil">
+                <a href="/user-settings">
+                    <div class="user-section__user-infos" title="configurações de perfil">
+                        <div class="user-infos__user_picture">
+                            <img src="../public/imgs/static/default-picture.png" alt="foto de perfil">
+                        </div>
+        
+                        <span class="user-infos__nickname">Nickname</span>
                     </div>
-    
-                    <span class="user-infos__nickname">Nickname</span>
-                </div>
+                </a>
 
                 <button id="user-section__logout-btn" title="sair">
                     <i class="fa-solid fa-right-from-bracket"></i>

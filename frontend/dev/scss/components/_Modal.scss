@@ -1,0 +1,23 @@
+@use '../setup/all' as *;
+
+dialog.modal {
+    border: none;
+    position: relative;
+    @include default-box($max-w: fit-content, $margin: auto);
+    display: none;
+
+    &:open { display: flex }
+    &::backdrop { background-color: rgba(0,0,0,0.2); }
+
+    button.modal__close-btn {
+        position: absolute;
+        top: $normal-padding;
+        right: $normal-padding;
+        @include rounded-square(2rem, 5px, $cancel-color);
+        color: white;
+        @include flex-center;
+        @include clickable(.3s);
+        
+        &:hover { background-color: $cancel-color-darken }
+    }
+}

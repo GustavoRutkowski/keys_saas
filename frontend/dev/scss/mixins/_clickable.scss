@@ -1,0 +1,4 @@
+@mixin clickable($transitionTime: 0) {
+    transition: $transitionTime all;
+    cursor: pointer;
+}
