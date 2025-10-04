@@ -45,7 +45,11 @@ main {
 
                     &.add-card {
                         padding: 0;
-                        &:hover { transform: none }
+                        transition: all .2s;
+                        &:hover {
+                            opacity: 1;
+                            transform: scale(1.05);
+                        }
 
                         button.add-card-btn {
                             margin: auto;

@@ -35,6 +35,10 @@ aside.lateral-bar {
                     background-color: rgba(black, .2);
                 }
 
+                &:hover {
+                    padding-left: $mid-padding + 1rem;
+                }
+
                 span {
                     flex: 1 1 auto;
                     display: block;

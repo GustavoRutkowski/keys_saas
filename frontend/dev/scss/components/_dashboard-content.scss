@@ -41,8 +41,18 @@ main {
             button.add-password-container__add-password {
                 box-shadow: $default-shadow;
                 z-index: 1;
+                font-weight: bolder;
     
-                @include circle-btn($default-btn-size, $secondary-color, $secondary-color-darken, #fff);
+                @include retangular-btn(
+                    $default-btn-size,
+                    $default-btn-size,
+                    $secondary-color,
+                    $secondary-color-darken,
+                    1.2rem, none, white
+                );
+                transition: all .3s;
+
+                &:hover { border-radius: 1.5rem }
             }
         }
     }
