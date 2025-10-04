@@ -1,3 +1,4 @@
+import Popup from './components/Popup';
 import ToggleViewButton from './components/ToggleViewButton';
 import { IUserCredentials } from './interfaces/IUser';
 import User from './models/User';
@@ -15,7 +16,8 @@ loginForm.addEventListener('submit', async e => {
 
     const EMAIL_REGEXP = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
     if (!EMAIL_REGEXP.test(form.get('email') as string)) {
-        alert('invalid email format');
+        const popup = new Popup('invalid email format', 3000, 'error');
+        await popup.show();
     }
 
     const userCredentials: IUserCredentials = {
@@ -33,5 +35,6 @@ loginForm.addEventListener('submit', async e => {
     }
     
     for (const key of form.keys()) form.delete(key);
-    alert(loginResponse.message);
+    const popup = new Popup(loginResponse.message, 3000, 'error');
+    await popup.show();
 });

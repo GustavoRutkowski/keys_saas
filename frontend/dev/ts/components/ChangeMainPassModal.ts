@@ -1,6 +1,7 @@
 import { IUserChangePasswordInfos } from "../interfaces/IUser";
 import User from "../models/User";
 import Modal from "./Modal";
+import Popup from "./Popup";
 
 class ChangeMainPassModal extends Modal {
     protected customClass: string = 'change-password-modal';
@@ -29,10 +30,10 @@ class ChangeMainPassModal extends Modal {
 
             const res = await User.changePassword(credentials);
 
-            if (res.success) alert('Senha atualizada com sucesso!');
-            else alert(res.message);
-
             this.close();
+
+            const popup = new Popup(res.message, 3000, res.success ? 'success' : 'error');
+            await popup.show();
         });
     }
 
