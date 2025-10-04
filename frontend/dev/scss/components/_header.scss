@@ -51,6 +51,8 @@ header {
                         border-bottom: 1px solid white;
                         background-color: rgba(#000, .2);
                     }
+
+                    &:focus { border-bottom: 2px dashed white }
                 }
             }
         }

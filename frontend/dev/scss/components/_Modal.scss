@@ -19,5 +19,6 @@ dialog.modal {
         @include clickable(.3s);
         
         &:hover { background-color: $cancel-color-darken }
+        &:focus { outline: 2px solid white }
     }
 }

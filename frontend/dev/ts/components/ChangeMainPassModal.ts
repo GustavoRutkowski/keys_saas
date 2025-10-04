@@ -31,6 +31,7 @@ class ChangeMainPassModal extends Modal {
             const res = await User.changePassword(credentials);
 
             this.close();
+            for (const key of form.keys()) form.delete(key);
 
             const popup = new Popup(res.message, 3000, res.success ? 'success' : 'error');
             await popup.show();

@@ -45,6 +45,7 @@ main {
                     @include clickable(.2s);
 
                     &:hover { opacity: 0.5 }
+                    &:focus { border-bottom: 4px solid }
                 }
             }
         }
@@ -58,6 +59,11 @@ main {
                 5px $normal-padding,
                 $normal-padding, $tiny-radius, .5s
             );
+
+            &:focus {
+                border: 2px solid black;
+                outline: 2px solid white;
+            }
         }
     }
 
@@ -68,6 +74,11 @@ main {
             $normal-padding $short-normal-padding,
             $normal-padding, $normal-radius, .5s
         );
+
+        &:focus {
+            border: 2px solid black;
+            outline: 2px solid white;
+        }
     }
 }
 
@@ -88,6 +99,11 @@ dialog.change-password-modal {
         &:hover {
             opacity: 1;
             background-color: $secondary-color-darken;
+        }
+
+        &:focus {
+            border: 2px solid black;
+            outline: 2px solid white;
         }
     }
 }
