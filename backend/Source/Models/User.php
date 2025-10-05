@@ -8,6 +8,7 @@ use Exception;
 use Source\Utils\ModelException;
 use Source\Models\Model;
 use Source\Utils\FileUploader;
+use Source\Utils\EmailSender;
 
 class User extends Model {
     protected static ?string $TABLE = 'users';
@@ -67,6 +68,19 @@ class User extends Model {
         $query = 'SELECT id, name, email, picture FROM users WHERE id = ?';
 
         $results = Connect::execute($query, [ $id ])['data'];
+        if (count($results) === 0)
+            throw new ModelException('user not found', 404);
+
+        $user = $results[0];
+        return $user;
+    }
+
+    public static function getByEmail(string $email) {
+        if (!$email) throw new ModelException('email is reqired');
+
+        $query = 'SELECT id, name, email, picture FROM users WHERE email = ?';
+
+        $results = Connect::execute($query, [ $email ])['data'];
         if (count($results) === 0)
             throw new ModelException('user not found', 404);
 
@@ -168,6 +182,53 @@ class User extends Model {
 
         $token = new JWTToken([ 'id' => $user['id'], 'email' => $user['email'] ]);
         return $token->getToken();
+    }
+
+    public static function recoverAccount(string $email): bool {
+        $user = self::getByEmail($email);
+        
+        $recoverToken = new JWTToken(
+            ['id' => $user['id'], 'email' => $user['email']],
+            '+10 minutes'
+        );
+
+        $recoverAccountURL = "http://localhost:4321/reset_password?token={$recoverToken->getToken()}";
+        
+        $title = "Keys - Recover your Account";
+        $content = "
+            <h2>Hi, {$user['name']}!</h2>
+            <p>You've requested account recovery. Click the link below to change your password.</p>
+            <a href=$recoverAccountURL>Reset Password</a>
+        ";
+
+        $sender = new EmailSender([$user]);
+        $success = $sender->send($title, $content);
+
+        if (!$success) throw new ModelException('failed to send message to user', 500);
+        return true;
+    }
+
+    public static function resetPassword(
+        string $recover_token,
+        string $new_main_pass,
+        string $repeat_new_main_pass
+    ): bool {
+        $id = self::authenticate($recover_token);
+        
+        if ($new_main_pass !== $repeat_new_main_pass)
+            throw new ModelException('passwords do not match');
+
+        if (strlen($new_main_pass) < 10)
+            throw new ModelException('password must be 10 or more characters long');
+
+        $encoded_pass = password_hash($new_main_pass, PASSWORD_DEFAULT);
+
+        $query = 'UPDATE users SET main_pass = ? WHERE id = ?';
+        $result = Connect::execute($query, [$encoded_pass, $id]);
+        if ($result['action'] !== 'UPDATE')
+            throw new ModelException('failed to reset user main_pass', 500);
+        
+        return true;
     }
 
     // Getters & Setters:

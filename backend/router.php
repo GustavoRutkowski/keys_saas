@@ -41,6 +41,12 @@ $router->mount('/users', function() use ($router) {
     $router->put('/user/main_pass', fn() => UsersController::updateUserMainPass());
 
     $router->post('/login', fn() => UsersController::login());
+
+    // Recover Account
+    $router->mount('/recover_account', function() use ($router) {
+        $router->post('/{email}', fn($email) => UsersController::recoverAccount($email));
+        $router->put('/reset-password', fn() => UsersController::resetPassword());
+    });
 });
 
 // Passwords

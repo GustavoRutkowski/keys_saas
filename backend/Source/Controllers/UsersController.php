@@ -83,4 +83,27 @@ class UsersController extends Controller {
             self::send($e->getHttpStatus(), $e->getMessage());
         }
     }
+
+    public static function recoverAccount(string $email) {
+        try {
+            User::recoverAccount($email);
+            self::send(200, "message sent to email $email");
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
+    }
+    
+    public static function resetPassword() {
+        $token = self::getRequestData()['headers']['token'];
+        $body = self::getRequestData()['body'];
+        $new_password = $body['new_main_pass'];
+        $repeat_password = $body['repeat_new_main_pass'];
+
+        try {
+            User::resetPassword($token, $new_password, $repeat_password);
+            self::send(200, 'main_pass changed successfully');
+        } catch(ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
+    }
 }
