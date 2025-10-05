@@ -3,15 +3,6 @@
 @use "components/scrollbar";
 @use "components/footer";
 
-@keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
 main {
     overflow-y: scroll;
 
@@ -27,6 +18,14 @@ main {
             max-width: 55dvw;
             font-size: 2rem;
             box-shadow: 8px 8px 0 rgba(black, .0375);
+            opacity: 0;
+            transform: translateY(3rem);
+            transition: opacity .8s ease, transform .8s ease;
+
+            &.fade-in {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
             &:nth-child(even) { margin-left: auto }
             
@@ -78,92 +77,102 @@ main {
                 background-color: #ebebeb;
                 color: black;
 
-                @include flexbox(row, center, center);
+                @include flexbox(row, center, start);
+
+                &:has(img) {
+                    background-color: transparent;
+                    aspect-ratio: unset;
+                }
+
+                img {
+                    border-radius: 5px;
+                    height: auto;
+                }
             }
 
             // Seções específicas
 
             &.landing-page__start-section {
-                background-color: #bbe3ff;
-                border-color: #6193ff;
+                background-color: #6193ff;
+                border-color: transparent;
                 border-bottom-right-radius: 5rem;
                 animation: fade-in .7s ease-out;
 
                 h2 {
                     max-width: 50dvw;
-                    color: #6193ff;
+                    color: #bbe3ff;
                 }
 
                 p { color: #1c4192 }
 
                 button {
-                    border-color: #6193ff;
-                    background-color: #6193ff;
+                    border-color: #1c4192;
+                    background-color: #1c4192;
                     
-                    &:hover { color: #6193ff }
+                    // &:hover { background-color: #bbe3ff }
                 }
             }
 
             &.landing-page__passwords-section {
-                background-color: #c7ffe3;
-                border-color: #1ddb7c;
+                background-color: #29f08c;
+                border-color: transparent;
                 animation: fade-in calc(.7s * 3) ease-out;
 
-                h2 { color: #1ddb7c }
+                h2 { color: #e4fff2 }
                 h3 { color: #19a15d }
                 p { color: #19a15d }
             }
 
             &.landing-page__security-section {
-                background-color: #fff2c9;
-                border-color: #ffb561;
+                background-color: #ffb561;
+                border-color: transparent;
 
-                h2 { color: #ffb561 }
-                h3 { color: #ff8c49 }
-                p { color: #ff8c49 }
+                h2 { color: #fff2c9 }
+                h3 { color: #d85c14 }
+                p { color: #d85c14 }
             }
 
             &.landing-page__cards-section {
-                background-color: #e9e2ff;
-                border-color:#be8dff;
+                background-color: #be8dff;
+                border-color: transparent;
 
-                h2 { color: #be8dff }
-                h3 { color: #c767ff }
-                p { color: #c767ff }
+                h2 { color: #e9e2ff }
+                h3 { color: #8b2ac4 }
+                p { color: #8b2ac4 }
             }
 
             &.landing-page__docs-section {
-                background-color: #fff1e6;
-                border-color: #af7461;
+                background-color: #af7461;
+                border-color: transparent;
 
-                h2 { color: #af7461 }
-                h3 { color: #9b4f49 }
-                p { color: #9b4f49 }
+                h2 { color: #fff1e6 }
+                h3 { color: #803631 }
+                p { color: #803631 }
             }
 
             &.landing-page__plan-section {
-                background-color: #e1f3ff;
-                border-color: #989fff;
+                background-color: #989fff;
+                border-color: transparent;
 
-                h2 { color: #989fff }
-                h3 { color: #6f79ff }
-                p  { color: #6f79ff }
-                ul { color: #6f79ff }
+                h2 { color: #e1f3ff }
+                h3 { color: #404bdd }
+                p  { color: #404bdd }
+                ul { color: #404bdd }
             }
 
             &.landing-page__buy-section {
-                background-color: #ffd9bb;
-                border-color: #ffa379;
+                background-color: #ffa379;
+                border-color: transparent;
 
-                h2 { color: #ffa379 }
-                h3 { color: #ff7b3e }
-                p  { color: #ff7b3e }
+                h2 { color: #ffd9bb }
+                h3 { color: #f56623 }
+                p  { color: #f56623 }
 
                 button {
-                    border-color: #ff7b3e;
-                    background-color: #ff7b3e;
+                    border-color: #f56623;
+                    background-color: #f56623;
 
-                    &:hover { color: #ff7b3e }
+                    // &:hover { color: #ff7b3e }
                 }
             }
         }
