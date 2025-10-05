@@ -35,14 +35,18 @@ class User extends Model {
         User::create($this->name, $this->email, $this->password);
     }
 
+    public static function emailExists(string $email): bool {
+        $query = 'SELECT COUNT(*) AS count FROM users WHERE email = ?';
+        $firstRow = Connect::execute($query, [$email])['data'][0];
+
+        return $firstRow['count'] > 0;
+    }
+
     public static function create($name, $email, $main_pass) {
         if (!$name || !$email || !$main_pass)
             throw new ModelException('name, email and main_pass are required!');
 
-        $countQuery = 'SELECT COUNT(*) AS count FROM users WHERE email = ?';
-        $firstRow = Connect::execute($countQuery, [$email])['data'][0];
-
-        if ($firstRow['count'] > 0)
+        if (self::emailExists($email))
             throw new ModelException('email already exists');
 
         $query = 'INSERT INTO users (name, email, main_pass) VALUES (?, ?, ?)';
