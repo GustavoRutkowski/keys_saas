@@ -54,7 +54,7 @@
     &:hover { color: get-contrast($context-color) }
 }
 
-@mixin icon-text-btn($bg: transparent, $pad: 0, $gap: 0, $b-radius: 0, $transitionTime: 0) {
+@mixin icon-text-btn($bg: transparent, $pad: 0, $gap: 0, $b-radius: 0, $transitionTime: $default-transition) {
     padding: $pad;
     border-radius: $b-radius;
     width: fit-content;

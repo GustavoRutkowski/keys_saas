@@ -1,0 +1,33 @@
+@use "setup/all" as *;
+
+main {
+    margin: 9rem auto;
+    width: 80%;
+    @include flex-row(space-between, $gap: 5rem);
+
+    .main-container {
+        margin-top: 3rem;
+        width: 60%;
+        @include flex-column($gap: 3rem);
+    }
+    
+    .image-container { width: 40% }
+
+    h1 {
+        font-size: 5rem;
+    }
+    p, a {
+        font-size: 2rem;
+        color: #ddd;
+    }
+    a.return-to-home {
+        @include icon-text-btn($secondary-color, 5px 1rem, 1rem, 5px);
+        color: white;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        filter: drop-shadow($default-shadow);
+    }
+}
