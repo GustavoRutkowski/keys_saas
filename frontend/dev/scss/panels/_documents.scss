@@ -48,12 +48,24 @@ section.panel-selected__documents {
                     object-fit: cover;
                 }
 
-                figcaption {
-                    padding: 0 0 1rem 1rem;
+                .label-container {
+                    padding: 0 1rem 1rem 1rem;
                     width: 100%;
+                    @include flex-row(space-between, center, $gap: $normal-padding);
+
+                    button {
+                        flex: 0 0;
+                        color: #ccc;
+                        @include clickable(.3s);
+
+                        &:hover { color: $cancel-color }
+                    }
+                }
+
+                figcaption {
                     text-align: left;
                     font-size: 1.5rem;
-                    flex-shrink: 0;
+                    flex: 1 0;
                     text-transform: uppercase;
                     font-weight: 500;
                     @include text-ellipsis;
