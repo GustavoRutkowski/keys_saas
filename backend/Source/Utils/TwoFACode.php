@@ -7,15 +7,15 @@ require __DIR__ . '/../../vendor/autoload.php';
 class TwoFACode {
     public static array $codes = [];
 
-    private int $userId;
+    private string $linkedEmail;
     private string $code;
     private int $expiresIn;
 
-    public function __construct(int $userId) {
+    public function __construct(string $linkedEmail) {
         define('S', 1000);
         define('MIN', 60 * S);
 
-        $this->userId = $userId;
+        $this->linkedEmail = $linkedEmail;
         $this->code = self::generateCode();
         $this->expiresIn = self::getCurrentMilliseconds() + 10 * MIN;
         
@@ -37,12 +37,17 @@ class TwoFACode {
         return round(microtime(true) * 1000);
     }
 
-    public static function findByUser(int $userId): array {
+    public static function findCodesByUser(string $email): array {
         $currentTime = self::getCurrentMilliseconds();
         
-        return array_filter(self::$codes, function($twoFACode) use ($userId, $currentTime) {
-            return $twoFACode->userId === $userId && $twoFACode->expiresIn > $currentTime;
+        return array_filter(self::$codes, function($twoFACode) use ($email, $currentTime) {
+            return $twoFACode->linkedEmail === $email && $twoFACode->expiresIn > $currentTime;
         });
+    }
+
+    public static function userHasCode(string $email, string $code) {
+        $userCodes = self::findCodesByUser($email);
+        return in_array($code, $userCodes);
     }
 
     public function getCode(): string {

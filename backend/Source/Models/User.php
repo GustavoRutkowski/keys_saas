@@ -9,6 +9,8 @@ use Source\Utils\ModelException;
 use Source\Models\Model;
 use Source\Utils\FileUploader;
 use Source\Utils\EmailSender;
+use Source\Utils\TwoFACode;
+use Source\Utils\Redis;
 
 class User extends Model {
     protected static ?string $TABLE = 'users';
@@ -43,15 +45,40 @@ class User extends Model {
         return $firstRow['count'] > 0;
     }
 
-    public static function create($name, $email, $main_pass) {
+    private static function validateRegister($name, $email, $main_pass): void {
         if (!$name || !$email || !$main_pass)
             throw new ModelException('name, email and main_pass are required!');
 
         if (self::emailExists($email))
             throw new ModelException('email already exists');
+    }
+
+    public static function register($name, $email, $main_pass) {
+        self::validateRegister($name, $email, $main_pass);
+
+        $hashedPassword = password_hash($main_pass, PASSWORD_DEFAULT);
+
+        $cachedUser = json_encode([
+            'name' => $name,
+            'email' => $email,
+            'main_pass' => $hashedPassword
+        ]);
+
+        try { self::send2FACode($email); }
+        catch (ModelException $e) { throw $e; }
+
+        define('S', 1000);
+        define('MIN', 60 * S);
+
+        $key = "verify:$email";
+        Redis::append($key, $cachedUser, 10 * MIN);
+    }
+
+    public static function create($name, $email, $main_pass, bool $in_cache = false): string {
+        self::validateRegister($name, $email, $main_pass);
 
         $query = 'INSERT INTO users (name, email, main_pass) VALUES (?, ?, ?)';
-        $hashedPassword = password_hash($main_pass, PASSWORD_DEFAULT);
+        $hashedPassword = $in_cache ? $main_pass : password_hash($main_pass, PASSWORD_DEFAULT);
 
         $createdUser = Connect::execute($query, [$name, $email, $hashedPassword]);
         return $createdUser['insertId'];
@@ -231,16 +258,43 @@ class User extends Model {
         return true;
     }
 
-    public static function send2FACode(string $email): void {
-        // Envia um email com um código de 9 digitos para o usuário
-        // Retorna true ou um erro
+    private static function send2FACode(string $email): bool {
+        $code = new TwoFACode($email);
 
+        $mailTitle = 'Keys - Verification Code';
+        $mailContent = "
+            <h2>Hello!</h2>
+            <p>You've received a two-factor verification code. Copy and paste this code to complete your registration.</p>
+            
+            <p>Your verification code is: <strong>{$code->getCode()}</strong>.</p>
+        ";
 
+        $sender = new EmailSender([ 'email' => $email ]);
+        $success = $sender->send($mailTitle, $mailContent);
+
+        if (!$success) throw new ModelException('failed to send code by email', 500);
+        return true;
     }
 
     public static function verify2FACode(string $email, string $code) {
-        // Verifica se o código informado existe para o usuário (pegar o id por email).
-        // Caso sim, pega os dados guardados (no Redis) e cadastra um user no banco com esses dados.
+        $hasCode = TwoFACode::userHasCode($email, $code);
+        
+        if ($hasCode) {
+            $userData = Redis::get("verify:$email");
+            try {
+                User::create(
+                    $userData['name'],
+                    $userData['email'],
+                    $userData['main_pass'],
+                    true
+                );
+                return true;
+            } catch (ModelException $e) {
+                throw $e;
+            }
+        }
+
+        return false;
     }
 
     // Getters & Setters:

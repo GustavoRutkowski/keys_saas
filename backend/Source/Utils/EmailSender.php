@@ -39,7 +39,7 @@ class EmailSender {
         
         foreach ($users as $user) {
             if (User::emailExists($user['email'])) continue;
-            self::$mailerInstance->addAddress($user['email'], $user['name']);
+            self::$mailerInstance->addAddress($user['email'], $user['name'] ?? null);
         }
     }
 
