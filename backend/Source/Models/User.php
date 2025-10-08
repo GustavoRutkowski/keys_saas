@@ -231,6 +231,18 @@ class User extends Model {
         return true;
     }
 
+    public static function send2FACode(string $email): void {
+        // Envia um email com um código de 9 digitos para o usuário
+        // Retorna true ou um erro
+
+
+    }
+
+    public static function verify2FACode(string $email, string $code) {
+        // Verifica se o código informado existe para o usuário (pegar o id por email).
+        // Caso sim, pega os dados guardados (no Redis) e cadastra um user no banco com esses dados.
+    }
+
     // Getters & Setters:
     
     public function getId(): ?int { return $this->id; }
