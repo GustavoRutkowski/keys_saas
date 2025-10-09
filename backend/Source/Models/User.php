@@ -53,7 +53,7 @@ class User extends Model {
             throw new ModelException('email already exists');
     }
 
-    public static function register($name, $email, $main_pass) {
+    public static function register($name, $email, $main_pass): string {
         self::validateRegister($name, $email, $main_pass);
 
         $hashedPassword = password_hash($main_pass, PASSWORD_DEFAULT);
@@ -72,6 +72,7 @@ class User extends Model {
 
         $key = "verify:$email";
         Redis::append($key, $cachedUser, 10 * MIN);
+        return $key;
     }
 
     public static function create($name, $email, $main_pass, bool $in_cache = false): string {
@@ -276,25 +277,23 @@ class User extends Model {
         return true;
     }
 
-    public static function verify2FACode(string $email, string $code) {
+    public static function verify2FACode(string $email, string $code): int {
         $hasCode = TwoFACode::userHasCode($email, $code);
         
-        if ($hasCode) {
-            $userData = Redis::get("verify:$email");
-            try {
-                User::create(
-                    $userData['name'],
-                    $userData['email'],
-                    $userData['main_pass'],
-                    true
-                );
-                return true;
-            } catch (ModelException $e) {
-                throw $e;
-            }
-        }
+        if (!$hasCode) throw new ModelException('invalid attempt! try again');
 
-        return false;
+        $userData = Redis::get("verify:$email");
+        try {
+            $insertId = User::create(
+                $userData['name'],
+                $userData['email'],
+                $userData['main_pass'],
+                true
+            );
+            return (int) $insertId;
+        } catch (ModelException $e) {
+            throw $e;
+        }
     }
 
     // Getters & Setters:

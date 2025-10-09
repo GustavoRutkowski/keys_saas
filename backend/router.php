@@ -32,7 +32,8 @@ $router = new Router();
 
 // Users
 $router->mount('/users', function() use ($router) {
-    $router->post('/', fn() => UsersController::createUser());
+    $router->post('/', fn() => UsersController::registerUser());
+    $router->post('/2fa', fn() => UsersController::verify2FACode());
 
     $router->get('/id/{id}', fn($id) => UsersController::getUserByID($id));
     $router->get('/user', fn() => UsersController::getUser());

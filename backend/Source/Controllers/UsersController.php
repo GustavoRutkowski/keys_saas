@@ -5,17 +5,34 @@ use Source\Models\User;
 use Source\Utils\ModelException;
 
 class UsersController extends Controller {
-    public static function createUser() {
+    public static function registerUser() {
         $body = self::getRequestData()['body'];
 
-        $insertId = User::create(
-            $body['name'],
-            $body['email'],
-            $body['main_pass']
-        );
+        try {
+            $key = User::register(
+                $body['name'],
+                $body['email'],
+                $body['main_pass']
+            );
 
-        $res = [ 'insertId' => $insertId ];
-        self::send(201, 'user created successfully!', data: $res);
+            $res = ['key' => $key];
+            self::send(200, 'user cached successfully!', data: $res);
+        } catch (ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
+    }
+
+    public static function verify2FACode() {
+        $body = self::getRequestData()['body'];
+
+        try {
+            $insertId = User::verify2FACode($body['email'], $body['code']);
+            $res = [ 'insertId' => $insertId ];
+
+            self::send(201, 'user created sucessfully!', data: $res);
+        } catch (ModelException $e) {
+            self::send($e->getHttpStatus(), $e->getMessage());
+        }
     }
 
     public static function getUserByID(int $id) {
