@@ -16,15 +16,98 @@ $dotenv->load();
 define('SECRET_KEY', $_ENV['JWT_SECRET']);
 define('URL', "http://localhost:{$_ENV['API_PORT']}/backend");
 
-class JWTToken
-{
+/**
+ * JWTToken class:
+    * This class is a utility for creating, decoding, and verifying JWT tokens using the Firebase\JWT library.
+    * It allows secure authentication and validation of user sessions through signed tokens.
+    * Each token contains metadata such as issuance time, expiration, and a custom payload.
+
+ * Setup:
+    * To configure the class, simply change the constants above in the 'define' sentence.
+    * The constants are: SECRET_KEY and URL.
+
+ * Constructor:
+    * Creates a new token with the specified payload and expiration time.
+
+    * @param array $payload -> The data you want to include in the token (e.g., user ID, email, etc.).
+    * @param string $expires -> Optional. The expiration time of the token (e.g., '+1 hour', '+1 day'). Default: '+1 hour'.
+
+    * Token structure:
+     * - iat: Issued at (timestamp)
+     * - jti: Unique token ID
+     * - iss: Issuer (the base URL of the API)
+     * - nbf: Not before (timestamp)
+     * - exp: Expiration timestamp
+     * - data: Custom payload
+
+    * @example:
+     * # e.g. 1:
+     * $token = new JWTToken(['user_id' => 1, 'email' => 'user@example.com']);
+     * echo $token->getToken();
+     * 
+     * # e.g. 2 - Custom expiration:
+     * $token = new JWTToken(['user_id' => 2], '+2 days');
+     * echo $token->getExpires();
+
+ * from method:
+    * Creates a JWTToken object from an existing JWT string.
+    * Useful when you receive a token from a client and need to verify or decode it.
+
+    * @param string $token -> The JWT string to be parsed.
+    * @return ?JWTToken -> Returns a JWTToken instance if valid, or null if decoding fails.
+
+    * @example:
+     * # e.g.:
+     * $received = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+     * $tokenObj = JWTToken::from($received);
+     * 
+     * if ($tokenObj === null) {
+     *     echo "Invalid token";
+     * } else {
+     *     print_r($tokenObj->getPayload());
+     * }
+
+ * verify method:
+    * Verifies if a token is valid and not expired.
+
+    * @param JWTToken $token -> The JWTToken object to be verified.
+    * @return array ->
+     * Returns an associative array with the following fields:
+     * [
+     *     'valid' => bool,           # True if the token is valid
+     *     'decoded_token' => array,  # Token payload (if valid)
+     *     'message' => string|null   # Error message if invalid
+     * ]
+
+    * @example:
+     * # e.g.:
+     * $tokenObj = JWTToken::from($tokenString);
+     * $validation = JWTToken::verify($tokenObj);
+     * 
+     * if ($validation['valid']) {
+     *     echo "Token valid!";
+     *     print_r($validation['decoded_token']);
+     * } else {
+     *     echo "Token invalid: " . $validation['message'];
+     * }
+
+ * Getters:
+    * getToken() -> Returns the encoded JWT string.
+    * getPayload() -> Returns the original payload data.
+    * getExpires() -> Returns the expiration date/time of the token.
+
+ * Dependencies:
+    * Requires Firebase\JWT.
+    * Make sure both are installed via Composer:
+     * composer require firebase/php-jwt
+ */
+class JWTToken {
     private const ALGORITHM = 'HS512';
     private string $value;
     private array $payload;
     private string $expires;
 
-    public function __construct(array $payload, string $expires = '+1 hour')
-    {
+    public function __construct(array $payload, string $expires = '+1 hour') {
         $this->payload = $payload;
         $this->expires = $expires;
 
@@ -45,8 +128,7 @@ class JWTToken
     }
 
     // JWTToken::from($token) -> O from gera um objeto do tipo token a partir da string, ja que o verify usa o objeto, n a string
-    public static function from(string $token): ?JWTToken
-    {
+    public static function from(string $token): ?JWTToken {
         try {
             $decoded = JWT::decode($token, new Key(SECRET_KEY, self::ALGORITHM));
 
@@ -71,9 +153,7 @@ class JWTToken
         }
     }
 
-
-    public static function verify(JWTToken $token): array
-    {
+    public static function verify(JWTToken $token): array {
         try {
             $decoded = JWT::decode($token->getToken(), new Key(SECRET_KEY, JWTToken::ALGORITHM));
             $now = new DateTimeImmutable();
